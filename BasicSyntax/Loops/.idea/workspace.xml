@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4c0871a5-d111-432e-9720-96514d104d05" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2grXz4SaByn9UWdWBGoSEbjx9gT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ArmstrongNumber.executor": "Run",
+    "Application.Change.executor": "Run",
+    "Application.ChristmasTree.executor": "Run",
+    "Application.Clock.executor": "Run",
+    "Application.CoinsAndNotes.executor": "Run",
+    "Application.CollatzConjecture.executor": "Run",
+    "Application.Encoding.executor": "Run",
+    "Application.EqualSumOfOddAndEvenPositions.executor": "Run",
+    "Application.EvenPairs.executor": "Run",
+    "Application.FactorialCalculator.executor": "Run",
+    "Application.HalfRhombus.executor": "Run",
+    "Application.HollowRectangle.executor": "Run",
+    "Application.LettersInAWord.executor": "Run",
+    "Application.MagicNumber.executor": "Run",
+    "Application.MultiplicationTable.executor": "Run",
+    "Application.NToZeroReverse.executor": "Run",
+    "Application.NewBuilding.executor": "Run",
+    "Application.NumberReversal.executor": "Run",
+    "Application.OneToNThroughM.executor": "Run",
+    "Application.OneToNThroughTwo.executor": "Run",
+    "Application.PadawanEquipment.executor": "Run",
+    "Application.PalindromeCheck.executor": "Run",
+    "Application.PasswordGenerator.executor": "Run",
+    "Application.PseudoFibonacciSequenceSum.executor": "Run",
+    "Application.PyramidOfNumbers.executor": "Run",
+    "Application.RageExpenses.executor": "Run",
+    "Application.RefactorSumOfOddNumbers.executor": "Run",
+    "Application.Rhombus.executor": "Run",
+    "Application.SpecialNumbers.executor": "Run",
+    "Application.SquareFrame.executor": "Run",
+    "Application.SquareOfAsterisks.executor": "Run",
+    "Application.SumOfEvenNumbers.executor": "Run",
+    "Application.SumOfVowels.executor": "Run",
+    "Application.UniqueCodes.executor": "Run",
+    "Application.UpTo1000EndingIn7.executor": "Run",
+    "Application.UpTo1000EndingInN.executor": "Run",
+    "Application.ZeroToHundred.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/SirmaAcademy",
+    "onboarding.tips.debug.path": "C:/SirmaAcademy/BasicSyntax/Loops/src/Main.java"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4c0871a5-d111-432e-9720-96514d104d05" name="Changes" comment="" />
+      <created>1716456931333</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1716456931333</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Main.java</url>
+          <line>11</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.StringIndexOutOfBoundsException" package="java.lang" />
+          <option name="timeStamp" value="4" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
