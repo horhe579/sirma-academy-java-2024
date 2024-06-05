@@ -6,7 +6,7 @@ public class MatrixSumOfSubmatrix {
         int rows = Integer.parseInt(sc.nextLine());
         int cols = Integer.parseInt(sc.nextLine());
 
-        Integer[][] matrix = CompareMatrices.createMatrix(rows, cols);
+        int[][] matrix = CompareMatrices.createMatrix(rows, cols);
 
         int max = Integer.MIN_VALUE;
         

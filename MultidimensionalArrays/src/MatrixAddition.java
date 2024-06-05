@@ -8,19 +8,19 @@ public class MatrixAddition {
         int [] matrixDimensions = Arrays.stream(sc.nextLine().split("[, ]+"))
                 .mapToInt(Integer::parseInt).toArray();
 
-        ArrayList<Integer [][]> matrices = new ArrayList<>();
+        ArrayList<int [][]> matrices = new ArrayList<>();
 
         for (int i = 0; i < 2; i++) {
             matrices.add(CompareMatrices.createMatrix(matrixDimensions[0], matrixDimensions[1]));
         }
 
-        Integer [][] newMatrix = matrixSum(matrices.get(0), matrices.get(1));
+        int [][] newMatrix = matrixSum(matrices.get(0), matrices.get(1));
         System.out.println(Arrays.deepToString(newMatrix));
     }
 
-    public static Integer[][] matrixSum(Integer[][] matrix1, Integer[][] matrix2)
+    public static int[][] matrixSum(int[][] matrix1, int[][] matrix2)
     {
-        Integer [][] newMatrix = new Integer[matrix1.length][matrix1[0].length];
+        int [][] newMatrix = new int[matrix1.length][matrix1[0].length];
         for (int i = 0; i < matrix1.length; i++) {
             for (int j = 0; j < matrix1[0].length; j++) {
                 newMatrix[i][j] = matrix1[i][j] + matrix2[i][j];

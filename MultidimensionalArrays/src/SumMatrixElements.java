@@ -7,9 +7,9 @@ public class SumMatrixElements {
         int rows = Integer.parseInt(sc.nextLine());
         int cols = Integer.parseInt(sc.nextLine());
 
-        Integer [][] matrix = CompareMatrices.createMatrix(rows, cols);
+        int [][] matrix = CompareMatrices.createMatrix(rows, cols);
         System.out.println(rows);
         System.out.println(cols);
-        System.out.println(Arrays.stream(matrix).flatMap(Arrays::stream).reduce(0, Integer::sum));
+        System.out.println(Arrays.stream(matrix).flatMapToInt(Arrays::stream).reduce(0, Integer::sum));
     }
 }

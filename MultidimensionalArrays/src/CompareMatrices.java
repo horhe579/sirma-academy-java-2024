@@ -8,7 +8,7 @@ public class CompareMatrices {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        ArrayList<Integer[][]> matrices = new ArrayList<>();
+        ArrayList<int[][]> matrices = new ArrayList<>();
 
         for (int i = 0; i < matrixLimit; i++) {
             int [] matrixDimensions = Arrays.stream(sc.nextLine().split("[, ]+"))
@@ -19,10 +19,10 @@ public class CompareMatrices {
         System.out.println(compareMatrices(matrices.get(0), matrices.get(1)));
     }
 
-    public static Integer[][] createMatrix(int rows, int cols)
+    public static int[][] createMatrix(int rows, int cols)
     {
         Scanner sc = new Scanner(System.in);
-        Integer [][] matrix = new Integer[rows][cols];
+        int [][] matrix = new int[rows][cols];
         for (int i = 0; i < rows; i++) {
             int[] rowElements = Arrays.stream(sc.nextLine().split("[, ]+"))
                     .mapToInt(Integer::parseInt)
@@ -34,7 +34,7 @@ public class CompareMatrices {
         return matrix;
     }
 
-    public static boolean compareMatrices(Integer[][] matrix1, Integer[][] matrix2)
+    public static boolean compareMatrices(int[][] matrix1, int[][] matrix2)
     {
         if (matrix1.length != matrix2.length || matrix1[0].length != matrix2[0].length)
         {

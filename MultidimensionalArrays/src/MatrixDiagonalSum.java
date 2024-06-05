@@ -5,7 +5,7 @@ public class MatrixDiagonalSum {
         Scanner sc = new Scanner(System.in);
         int rows = Integer.parseInt(sc.nextLine());
 
-        Integer[][] matrix = CompareMatrices.createMatrix(rows, rows);
+        int[][] matrix = CompareMatrices.createMatrix(rows, rows);
         int sum = 0;
 
         for (int i = 0; i < rows; i++) {
