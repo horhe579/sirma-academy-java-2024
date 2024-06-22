@@ -9,22 +9,21 @@ public class ReplaceWord {
         String path = "./Files/Input3.txt";
         File file = new File("./Files/Output.txt");
         try {
-            if(!file.exists())
-            {
+            if (!file.exists()) {
                 file.createNewFile();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        try(BufferedReader br = new BufferedReader(new FileReader(path)); BufferedWriter bw = new BufferedWriter(new FileWriter(file)))
-        {
-            String [] words = Arrays.stream(br.readLine().split("->")).map(s -> s.trim()).toArray(String[]::new);
+        try (BufferedReader br = new BufferedReader(new FileReader(path)); BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            String[] words = Arrays.stream(br.readLine().split("->")).map(s -> s.trim()).toArray(String[]::new);
+            StringBuilder modifiedText = new StringBuilder();
             String line = br.readLine();
-            while(line != null)
-            {
-                bw.write(line.replaceAll(words[0], words[1]));
+            while (line != null) {
+                modifiedText.append(line.replaceAll(words[0], words[1]));
                 line = br.readLine();
             }
+            bw.write(modifiedText.toString());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

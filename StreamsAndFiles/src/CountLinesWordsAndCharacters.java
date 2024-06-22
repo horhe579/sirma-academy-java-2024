@@ -1,24 +1,24 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class CountLinesWordsAndCharacters {
     public static void main(String[] args) {
         String name = "./Files/Input.txt";
 
-        
+        try(BufferedReader br = new BufferedReader(new FileReader(name)))
+        {
+            int lineCount = 0;
+            int wordCount = 0;
 
-    }
-
-    public static int calculateFallenOrcs(int initialCount, int increase, int hours) {
-        if (initialCount < 0) {
-            throw new IllegalArgumentException("Initial count of orcs cannot be negative.");
         }
-        if (hours < 0) {
-            throw new IllegalArgumentException("Number of hours cannot be negative.");
-        }
-        int orcCount = 0;
-        for (int i = 0; i < hours; i++, initialCount += increase) {
-            orcCount += initialCount;
+        catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        return orcCount;
     }
 
 }

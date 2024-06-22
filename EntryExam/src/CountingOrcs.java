@@ -53,9 +53,9 @@ public class CountingOrcs {
         if (hours < 0) {
             throw new IllegalArgumentException("Number of hours cannot be negative.");
         }
-        int orcCount = 0;
 
-        return orcCount = initialCount+increase*hours;
+        //return ((hours - 1) * (hours) / 2) * increase + hours * initialCount;
+        return (int)(Math.pow(hours, 2) - hours)/2*increase + hours*initialCount;
     }
 
 
