@@ -21,6 +21,7 @@ public class CountingOrcs {
                     throw new IllegalArgumentException("Number of hours cannot be negative.");
                 }
                 System.out.println(calculateFallenOrcs(initialCount, increase, hours));
+                System.out.println(calculateFallenOrcsUsingMyBrain(initialCount, increase, hours));
                 sc.close();
                 return;
             } catch (NumberFormatException e) {
@@ -44,5 +45,18 @@ public class CountingOrcs {
         }
         return orcCount;
     }
+
+    public static int calculateFallenOrcsUsingMyBrain(int initialCount, int increase, int hours) {
+        if (initialCount < 0) {
+            throw new IllegalArgumentException("Initial count of orcs cannot be negative.");
+        }
+        if (hours < 0) {
+            throw new IllegalArgumentException("Number of hours cannot be negative.");
+        }
+        int orcCount = 0;
+
+        return orcCount = initialCount+increase*hours;
+    }
+
 
 }

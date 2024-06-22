@@ -1,12 +1,20 @@
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StarBattlesEnigma {
 
-    public final static Pattern messagePattern = Pattern.compile("@(?<planetName>\\w+):(?<population>\\d+)!(?<attackType>A|D)!->(?<soldierCount>\\d+)");
+    private final static Pattern messagePattern = Pattern.compile("@(?<planetName>\\w+):(?<population>\\d+)!(?<attackType>A|D)!->(?<soldierCount>\\d+)");
+    private final static HashSet<Character> enigmaLetters = new HashSet<>();
+
+    static {
+        enigmaLetters.add('s');
+        enigmaLetters.add('t');
+        enigmaLetters.add('a');
+        enigmaLetters.add('r');
+    }
+
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -26,17 +34,14 @@ public class StarBattlesEnigma {
     }
 
     private static String decryptLegendaryStarEnigma(String message) {
-        int count = 0;
-        for (char c : message.toLowerCase().toCharArray()) {
-            if (c == 's' || c == 't' || c == 'a' || c == 'r') {
-                count++;
-            }
-        }
-        StringBuilder decryptedMessage = new StringBuilder(message.length());
-        for (int i = 0; i < message.length(); i++) {
-            decryptedMessage.append((char) ((int) message.toCharArray()[i] - count));
-        }
-        return decryptedMessage.toString();
+        long count = message.toLowerCase(Locale.US).chars()
+                .mapToObj(c -> (char) c)
+                .filter(enigmaLetters::contains)
+                .count();
+
+        return message.chars().map(c -> c - (int) count)
+                .mapToObj(c -> String.valueOf((char) c))
+                .collect(Collectors.joining(""));
     }
 
     private static void parseLegendaryStarEnigma(String decryptedMessage, ArrayList<String> attacked, ArrayList<String> destroyed) {
