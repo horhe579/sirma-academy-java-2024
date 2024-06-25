@@ -1,7 +1,9 @@
+import Classes.Person;
+
 import java.io.*;
 import java.util.*;
 
-public class SerializeAndDeserializeMap {
+public class SerializeCustomObject {
     private static final HashSet<String> inputChoices = new HashSet<>();
 
     static {
@@ -13,14 +15,14 @@ public class SerializeAndDeserializeMap {
 
     public static void main(String[] args) {
 
-        File file = new File("./Files/map.ser");
+        File file = new File("./Files/persons.ser");
         String choice = "";
-        HashMap<String, Integer> people = new HashMap<>();
-        people.put("Gosho", 19);
-        people.put("Pesho", 12);
-        people.put("Bobi", 13);
-        people.put("Viktor", 16);
-        people.put("Atanas", 33);
+        ArrayList<Person> people = new ArrayList<>();
+        people.add(new Person("Az", 18));
+        people.add(new Person("Ti", 8));
+        people.add(new Person("Toi", 778));
+        people.add(new Person("Tq", 7));
+        people.add(new Person("To", 59));
 
         try (Scanner sc = new Scanner(System.in)) {
             while (true) {
@@ -38,6 +40,8 @@ public class SerializeAndDeserializeMap {
             case "r":
             case "read":
                 readMapFromFile(file);
+                //ArrayList<int[]> nums = new ArrayList<>(Arrays.asList(new int[]{1, 2, 3}, new int[]{4, 5, 6}));
+                //System.out.println(nums.toString());
                 break;
             case "w":
             case "write":
@@ -49,8 +53,8 @@ public class SerializeAndDeserializeMap {
     private static void readMapFromFile(File file) {
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(fis);) {
 
-            HashMap<String, Integer> map = (HashMap<String, Integer>) ois.readObject();
-            System.out.println(map.toString());
+            ArrayList<Person> people = (ArrayList<Person>) ois.readObject();
+            System.out.println(people);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -61,10 +65,10 @@ public class SerializeAndDeserializeMap {
         }
     }
 
-    private static void writeMapToFile(File file, HashMap<String, Integer> map) {
+    private static void writeMapToFile(File file, ArrayList<Person> peopleList) {
         try (FileOutputStream fos = new FileOutputStream(file); ObjectOutputStream ous = new ObjectOutputStream(fos)) {
 
-            ous.writeObject(map);
+            ous.writeObject(peopleList);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
