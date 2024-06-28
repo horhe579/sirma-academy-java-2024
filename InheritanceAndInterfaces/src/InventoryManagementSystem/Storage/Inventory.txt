@@ -1,0 +1,2 @@
+Fiat~~~Punto~~~ELECTRONICS~~~Cars~~~10.0~~~1620.0~~~true~~~false~~~true~~~false~~~d7b7fd86-6584-4283-8df2-b34d473e4eba~~~1
+Opel~~~Astra~~~ELECTRONICS~~~Cars~~~10.0~~~1620.0~~~true~~~false~~~true~~~false~~~ad32cb0a-89f5-4162-9818-ea8f3ecc8934~~~1
