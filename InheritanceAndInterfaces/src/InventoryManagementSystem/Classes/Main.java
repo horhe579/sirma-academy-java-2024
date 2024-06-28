@@ -3,12 +3,15 @@ package InventoryManagementSystem.Classes;
 import InventoryManagementSystem.Classes.InventoryClient;
 import InventoryManagementSystem.Enums.ItemType;
 
+import javax.xml.transform.Source;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
     private static int userInputsCount = 0;
     private static InventoryClient client = new InventoryClient();
+    private static Payment payment = new Payment(100000, client);
+    //private static Order order = new Order(client);
 
     public static void main(String[] args) {
         handleUserInput();
@@ -39,15 +42,17 @@ public class Main {
         System.out.println("2. Remove Item by ID");
         System.out.println("3. Display List of Items");
         System.out.println("4. Categorize Items");
-        System.out.println("5. Place Order");
-        System.out.println("6. Load Inventory from File");
-        System.out.println("7. Save Inventory to File");
-        System.out.println("8. Exit");
+        System.out.println("5. Add Item to Order");
+        System.out.println("6. Remove Item from Order");
+        System.out.println("7. Place Order");
+        System.out.println("8. Load Inventory from File");
+        System.out.println("9. Save Inventory to File");
+        System.out.println("10. Exit");
     }
 
 
     private static boolean isValidUserInput(String input) {
-        return input.matches("[1-8]");
+        return input.matches("[1-9]|10");
     }
 
     private static void readUserInput(InventoryClient client, int choice, Scanner sc) {
@@ -66,22 +71,47 @@ public class Main {
                     handleCategorizeItems(sc, client);
                     break;
                 case 5:
-                    handlePlaceOrder(sc, client);
+                    handleAddItemToOrder(sc);
                     break;
                 case 6:
-                    handleReadFromDir(sc, client);
+                    handleRemoveItemFromOrder(sc);
                     break;
                 case 7:
-                    handleWriteToDir(sc, client);
+                    handlePlaceOrder(sc, client);
                     break;
                 case 8:
+                    handleReadFromDir(sc, client);
+                    break;
+                case 9:
+                    handleWriteToDir(sc, client);
+                    break;
+                case 10:
                     System.exit(0);
+
                 default:
                     System.err.println("Invalid choice. Please try again.");
             }
         } catch (IllegalArgumentException e) {
             System.err.println(e);
         }
+    }
+
+    private static void handleRemoveItemFromOrder(Scanner sc) {
+        System.out.print("Enter the ID of the item to remove from the cart:");
+        String ID = sc.nextLine();
+        System.out.print("Enter the quantity you want to remove:");
+        int quantity = Integer.parseInt(sc.nextLine());
+        payment.removeItemFromCart(ID, quantity);
+        payment.printOrder();
+    }
+
+    private static void handleAddItemToOrder(Scanner sc) {
+        System.out.print("Enter the ID of the item to add to the cart:");
+        String ID = sc.nextLine();
+        System.out.print("Enter the quantity you want to order:");
+        int quantity = Integer.parseInt(sc.nextLine());
+        payment.addItemToCart(ID, quantity);
+        payment.printOrder();
     }
 
     private static void handleItemCreation(Scanner sc, InventoryClient cli) {
@@ -200,6 +230,7 @@ public class Main {
             String listName = sc.nextLine();
             if (InventoryClient.isValidInventoryType(listName)) {
                 cli.displayItemInventory(listName);
+                break;
             } else {
                 System.err.println("Invalid list name");
             }
@@ -213,7 +244,12 @@ public class Main {
     }
 
     private static void handlePlaceOrder(Scanner sc, InventoryClient cli) {
-
+        try {
+            payment.completeOrder();
+            payment.printOrder();
+        } catch (IllegalArgumentException e) {
+            System.err.println(e);
+        }
     }
 
     private static void handleReadFromDir(Scanner sc, InventoryClient cli) {

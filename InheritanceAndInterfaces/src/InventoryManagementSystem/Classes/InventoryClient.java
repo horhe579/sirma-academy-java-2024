@@ -129,7 +129,7 @@ public class InventoryClient {
             throw new IllegalArgumentException("Item with ID " + ID + " does not exist.");
         }
         if (item.getQuantity() < quantity) {
-            throw new IllegalArgumentException("Insufficient quantity for item " + ID + ((item.getQuantity() == 0) ? " none left." : (", only " + inventory.get(ID).getQuantity() + "left.");
+            throw new IllegalArgumentException("Insufficient quantity for item " + ID + ((item.getQuantity() == 0) ? " none left." : (", only " + inventory.get(ID).getQuantity() + "left.")));
         }
         item.setQuantity(item.getQuantity() - quantity);
     }

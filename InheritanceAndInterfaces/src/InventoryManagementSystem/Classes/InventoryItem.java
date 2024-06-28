@@ -38,7 +38,7 @@ public class InventoryItem extends AbstractItem {
     }
 
     public void setQuantity(int quantity) {
-        if (quantity < 1) {
+        if (quantity < 0) {
             throw new IllegalArgumentException("Invalid quantity " + quantity);
         }
         this.quantity = quantity;
