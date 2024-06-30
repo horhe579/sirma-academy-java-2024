@@ -1,10 +1,9 @@
 package InventoryManagementSystem.Classes;
 
-import InventoryManagementSystem.Classes.InventoryClient;
 import InventoryManagementSystem.Enums.ItemType;
 
-import javax.xml.transform.Source;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -149,8 +148,7 @@ public class Main {
                 while (true) {
                     try {
                         weight = Double.parseDouble(sc.nextLine().trim());
-                        if(weight < 500 && weight > 0)
-                        {
+                        if (weight < 500 && weight > 0) {
                             break;
                         }
                         System.err.println("Enter a valid number between 1 and 500");
@@ -163,8 +161,7 @@ public class Main {
                 while (true) {
                     try {
                         price = Double.parseDouble(sc.nextLine().trim());
-                        if(price > 0)
-                        {
+                        if (price > 0) {
                             break;
                         }
                         System.err.println("Enter a valid price above 0");
@@ -199,8 +196,7 @@ public class Main {
                 while (true) {
                     try {
                         quantity = Integer.parseInt(sc.nextLine().trim());
-                        if(quantity > 0)
-                        {
+                        if (quantity > 0) {
                             break;
                         }
                         System.err.println("Enter a valid quantity above 0");
@@ -226,15 +222,11 @@ public class Main {
 
     private static void handleListInventory(Scanner sc, InventoryClient cli) {
         System.out.print("List to display(inventory/i OR discounted/d): ");
-        while (true) {
-            String listName = sc.nextLine();
-            if (InventoryClient.isValidInventoryType(listName)) {
-                cli.displayItemInventory(listName);
-                break;
-            } else {
-                System.err.println("Invalid list name");
-            }
+        String listToString = cli.displayItemInventory(sc.nextLine().toLowerCase(Locale.US).trim());
+        while (listToString == null) {
+            listToString = cli.displayItemInventory(sc.nextLine().toLowerCase(Locale.US).trim());
         }
+        System.out.println(listToString);;
     }
 
     private static void handleCategorizeItems(Scanner sc, InventoryClient cli) {
@@ -245,8 +237,8 @@ public class Main {
 
     private static void handlePlaceOrder(Scanner sc, InventoryClient cli) {
         try {
-            payment.completeOrder();
-            payment.printOrder();
+            payment.completeOrderPayment();
+            //payment.printOrder();
         } catch (IllegalArgumentException e) {
             System.err.println(e);
         }
@@ -254,8 +246,7 @@ public class Main {
 
     private static void handleReadFromDir(Scanner sc, InventoryClient cli) {
         System.out.println("Write the directory of the txt file you want to load an inventory from:");
-        while (true)
-        {
+        while (true) {
             try {
                 String loadFrom = sc.nextLine();
                 cli.loadInventoryFromFile(loadFrom);
@@ -268,8 +259,7 @@ public class Main {
 
     private static void handleWriteToDir(Scanner sc, InventoryClient cli) {
         System.out.println("Write the directory of the txt file you want to save this inventory to:");
-        while (true)
-        {
+        while (true) {
             try {
                 String loadTo = sc.nextLine();
                 cli.saveInventoryToFile(loadTo);

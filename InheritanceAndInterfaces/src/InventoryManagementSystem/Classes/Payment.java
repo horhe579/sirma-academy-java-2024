@@ -21,7 +21,7 @@ public class Payment {
         try {
             order.addItemToCart(ID, quantity);
         } catch (IllegalArgumentException e) {
-            System.err.println(e);
+            System.err.println(e.getMessage());
         }
     }
 
@@ -30,20 +30,26 @@ public class Payment {
         try {
             order.removeItemFromCart(ID, quantity);
         } catch (IllegalArgumentException e) {
-            System.err.println(e);
+            System.err.println(e.getMessage());
         }
     }
 
-    public void completeOrder()
+    //place order only if order collection is not empty
+    public void completeOrderPayment()
     {
-        //fix this, placing an order makes it so when you add new items to it it p
         if(funds < order.getOrderPrice())
         {
             throw new IllegalArgumentException("Insufficient funds");
         }
-        funds -= order.getOrderPrice();
-        this.isComplete = true;
-        order.emptyCart();
+
+        try {
+            order.emptyCart();
+            funds -= order.getOrderPrice();
+            this.isComplete = true;
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 
     public void printOrder()
