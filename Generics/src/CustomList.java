@@ -19,6 +19,9 @@ public class CustomList<E extends Comparable<E>> {
     }
 
     public void add(E element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Element cannot be null");
+        }
         this.expand();
         elements[this.size++] = element;
     }
@@ -43,6 +46,9 @@ public class CustomList<E extends Comparable<E>> {
     }
 
     public boolean contains(E element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Element cannot be null");
+        }
         for (int i = 0; i < size; i++) {
             if (elements[i].compareTo(element) == 0) {
                 return true;
@@ -61,6 +67,9 @@ public class CustomList<E extends Comparable<E>> {
     }
 
     public int countGreaterThan(E element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Element cannot be null");
+        }
         int count = 0;
         for (int i = 0; i < size; i++) {
             if (elements[i].compareTo(element) > 0) {
