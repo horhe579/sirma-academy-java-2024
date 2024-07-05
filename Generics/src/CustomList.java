@@ -96,6 +96,17 @@ public class CustomList<E extends Comparable<E>> {
         return min;
     }
 
+    public E get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        return elements[index];
+    }
+
+    public int size() {
+        return this.size;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
