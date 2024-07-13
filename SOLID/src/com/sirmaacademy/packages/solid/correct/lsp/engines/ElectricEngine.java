@@ -1,6 +1,4 @@
-package com.sirmaacademy.packages.solid.correct.lsp;
-
-import java.nio.ShortBuffer;
+package com.sirmaacademy.packages.solid.correct.lsp.engines;
 
 public class ElectricEngine extends Engine{
 

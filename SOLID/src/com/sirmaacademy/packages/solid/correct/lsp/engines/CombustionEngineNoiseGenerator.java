@@ -1,4 +1,4 @@
-package com.sirmaacademy.packages.solid.correct.lsp;
+package com.sirmaacademy.packages.solid.correct.lsp.engines;
 
 public class CombustionEngineNoiseGenerator implements CombustionCarNoiseGenerator{
     @Override
