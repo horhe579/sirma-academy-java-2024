@@ -1,8 +1,10 @@
-package com.sirma.classes;
+package com.sirma.classes.employeemanager;
 
+import com.sirma.classes.employee.Position;
 import com.sirma.classes.employee.Employee;
+import com.sirma.classes.exceptions.EmployeeAlreadyExistsException;
+import com.sirma.classes.exceptions.EmployeeNotFoundException;
 import com.sirma.enums.Department;
-import com.sirma.interfaces.Employable;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -19,11 +21,12 @@ public class CsvEmployeeManager {
         this.filePath = filePath;
     }
 
-    public Employee addEmployee(Employee employee)
+
+    protected Employee addEmployee(Employee employee)
     {
         String employeeId = employee.getID().toString();
         if (getEmployeeWithID(employeeId) != null) {
-            throw new IllegalArgumentException("Employee with ID " + employeeId + " already exists.");
+            throw new EmployeeAlreadyExistsException("Employee with ID " + employeeId + " already exists.");
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.filePath, true))) {
@@ -36,8 +39,9 @@ public class CsvEmployeeManager {
         }
     }
 
+
     //list employees from CSV
-    public List<Employee> listEmployees() {
+    protected List<Employee> listEmployees() {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             List<Employee> employees = new ArrayList<>();
             String line;
@@ -48,7 +52,7 @@ public class CsvEmployeeManager {
                 Employee employee = parseEmployeeFromLine(line);
                 employees.add(employee);
             }
-            return employees;
+            return (employees.isEmpty()) ? null : employees;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Cannot read from nonexistent file with name " + filePath);
         } catch (IOException e) {
@@ -57,9 +61,9 @@ public class CsvEmployeeManager {
     }
 
     //fire employee with id in csv
-    public void deleteEmployeeWithID(String employeeId) {
+    protected void deleteEmployeeWithID(String employeeId) {
         if (getEmployeeWithID(employeeId) == null) {
-            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
         }
 
         List<String> replacedLines = this.readAllFromFile().stream()
@@ -70,10 +74,10 @@ public class CsvEmployeeManager {
     }
 
     //edit employee with id in csv
-    public void editEmployeeWithID(Employee employee) {
+    protected Employee editEmployeeWithID(Employee employee) {
         String employeeId = employee.getID().toString();
         if (getEmployeeWithID(employeeId) == null) {
-            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
         }
 
         var replacedLines = this.readAllFromFile().stream()
@@ -81,17 +85,23 @@ public class CsvEmployeeManager {
                 .collect(Collectors.toList());
 
         this.writeToFile(replacedLines);
+        return employee;
     }
 
-    public Employee getEmployeeWithID(String employeeId) {
-        return listEmployees().stream()
+    protected Employee getEmployeeWithID(String employeeId) {
+        List<Employee> employees = listEmployees();
+        if(employees == null)
+        {
+            return null;
+        }
+        return employees.stream()
                 .filter(e -> e.getID().toString().equals(employeeId))
                 .findFirst().orElse(null);
     }
 
     //helper methods
 
-    private Employee parseEmployeeFromLine(String line) {
+    protected Employee parseEmployeeFromLine(String line) {
         //add some error handling, format checking
         //although if there is a problem in parsing there must be a problem in writing, so you are in fault
         //ID,Name,StartDate,EndDate,Department,Role,Salary
@@ -102,7 +112,7 @@ public class CsvEmployeeManager {
         LocalDate endDate = (contents[3].equals("null")) ? null : LocalDate.parse(contents[3]);
         Department department = Department.valueOf(contents[4]);
         String role = contents[5];
-        double salary = Double.parseDouble(contents[5]);
+        double salary = Double.parseDouble(contents[6]);
         Employee employee = new Employee(employeeID, employeeName, (startDate == null) ? null : new Position(department, role, salary, startDate, endDate));
 
         return employee;

@@ -1,6 +1,5 @@
 package com.sirma.classes.employee;
 
-import com.sirma.classes.Position;
 import com.sirma.interfaces.Employable;
 
 import java.util.UUID;
@@ -16,6 +15,13 @@ public class Employee implements Employable{
 
     public Employee(UUID ID, String name, Position position) {
         this.ID = ID;
+        this.name = name;
+        this.position = position;
+        this.isEmployed = true;
+    }
+
+    public Employee(String name, Position position) {
+        this.ID = UUID.randomUUID();
         this.name = name;
         this.position = position;
         this.isEmployed = true;

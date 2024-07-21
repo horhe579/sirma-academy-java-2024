@@ -1,4 +1,4 @@
-package com.sirma.classes;
+package com.sirma.classes.employee;
 
 import com.sirma.enums.Department;
 import com.sirma.interfaces.Job;
@@ -54,10 +54,10 @@ public class Position implements Job {
     @Override
     public String toString() {
         return String.join(",",
-                this.started.toString(),
-                this.ended.toString(),
-                this.department.toString(),
-                this.role,
+                this.started != null ? this.started.toString() : "null",
+                this.ended != null ? this.ended.toString() : "null",
+                this.department != null ? this.department.toString() : "null",
+                this.role != null ? this.role : "null",
                 String.valueOf(this.salary));
     }
 }
