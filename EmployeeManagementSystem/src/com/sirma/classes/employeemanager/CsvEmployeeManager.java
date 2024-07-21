@@ -89,6 +89,7 @@ public class CsvEmployeeManager {
     }
 
     //edit employee with id in csv
+    //when editing employees the first row gets expanded for some unholy reason
     protected Employee editEmployeeWithID(Employee employee) {
         String employeeId = employee.getID().toString();
         if (getEmployeeWithID(employeeId) == null) {
