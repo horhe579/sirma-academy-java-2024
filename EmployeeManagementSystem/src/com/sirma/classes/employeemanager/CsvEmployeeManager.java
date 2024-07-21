@@ -19,8 +19,23 @@ public class CsvEmployeeManager {
 
     public CsvEmployeeManager(String filePath) {
         this.filePath = filePath;
+        initializeFile();
     }
 
+    private void initializeFile() {
+        File file = new File(this.filePath);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                    bw.write("Id,Name,StartDate,EndDate,Department,Role,Salary");
+                    bw.newLine();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error initializing file: " + this.filePath, e);
+            }
+        }
+    }
 
     protected Employee addEmployee(Employee employee)
     {
