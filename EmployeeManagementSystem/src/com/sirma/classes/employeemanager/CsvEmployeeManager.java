@@ -27,10 +27,6 @@ public class CsvEmployeeManager {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                    bw.write("Id,Name,StartDate,EndDate,Department,Role,Salary");
-                    bw.newLine();
-                }
             } catch (IOException e) {
                 throw new RuntimeException("Error initializing file: " + this.filePath, e);
             }
@@ -148,7 +144,6 @@ public class CsvEmployeeManager {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.filePath))) {
             lines = lines.stream().filter(l -> !l.equals("Id,Name,StartDate,EndDate,Department,Role,Salary"))
                     .collect(Collectors.toList());
-            bw.write("Id,Name,StartDate,EndDate,Department,Role,Salary");
             for (String line : lines) {
                 if (line != null) {
                     bw.write(line);
