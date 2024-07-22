@@ -7,8 +7,8 @@ import com.sirma.classes.exceptions.NoEmployeesException;
 
 import java.util.List;
 
+// A repository class for managing Employee objects using a CsvEmployeeManager
 public class EmployeeRepository {
-    //implement saving to database(csv file in this case)
 
     private CsvEmployeeManager manager;
 
@@ -16,7 +16,8 @@ public class EmployeeRepository {
         this.manager = new CsvEmployeeManager(filePath);
     }
 
-    //save employee|POST
+    // Saves a new employee to the repository
+    // Throws EmployeeAlreadyExistsException if the employee already exists
     protected Employee createEmployee(Employee employee) {
         try {
             return this.manager.addEmployee(employee);
@@ -25,7 +26,8 @@ public class EmployeeRepository {
         }
     }
 
-    //edit employee|PUT
+    // Updates an existing employee in the repository
+    // Throws EmployeeNotFoundException if the employee does not exist
     protected Employee updateEmployee(Employee employee) {
         try {
             return this.manager.editEmployeeWithID(employee);
@@ -34,7 +36,8 @@ public class EmployeeRepository {
         }
     }
 
-    //remove employee|DELETE
+    // Deletes an employee from the repository
+    // Throws EmployeeNotFoundException if the employee does not exist
     protected void deleteEmployee(String employeeID) {
         try {
             this.manager.deleteEmployeeWithID(employeeID);
@@ -43,7 +46,8 @@ public class EmployeeRepository {
         }
     }
 
-    //get employee|GET{id}
+    // Retrieves an employee by ID from the repository
+    // Throws EmployeeNotFoundException if the employee does not exist
     protected Employee getEmployee(String employeeId) {
         Employee employee = this.manager.getEmployeeWithID(employeeId);
         if (employee == null) {
@@ -52,7 +56,8 @@ public class EmployeeRepository {
         return employee;
     }
 
-    //get employees|GET
+    // Retrieves all employees from the repository
+    // Throws NoEmployeesException if no employees are found
     protected List<Employee> getEmployees() {
         List<Employee> employees = this.manager.listEmployees();
         if (employees == null) {
@@ -60,5 +65,4 @@ public class EmployeeRepository {
         }
         return employees;
     }
-
 }

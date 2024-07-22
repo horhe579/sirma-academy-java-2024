@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+// A class for manipulating .csv files to read and write Employee objects
 public class CsvEmployeeManager {
 
     private final String filePath;
@@ -22,6 +23,85 @@ public class CsvEmployeeManager {
         initializeFile();
     }
 
+    // Adds an employee to the .csv file
+    // Throws EmployeeAlreadyExistsException if an employee with the same ID already exists
+    protected Employee addEmployee(Employee employee) {
+        String employeeId = employee.getID().toString();
+        if (getEmployeeWithID(employeeId) != null) {
+            throw new EmployeeAlreadyExistsException("Employee with ID " + employeeId + " already exists.");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.filePath, true))) {
+            bw.write(employee.toString());
+            bw.newLine();
+            return employee;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Lists all employees from the .csv file
+    // Returns a list of Employee objects or null if no entries are found
+    protected List<Employee> listEmployees() {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            List<Employee> employees = new ArrayList<>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                Employee employee = parseEmployeeFromLine(line);
+                employees.add(employee);
+            }
+            return employees.isEmpty() ? null : employees;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Cannot read from nonexistent file: " + filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Deletes an employee with the specified ID from the .csv file
+    // Throws EmployeeNotFoundException if no employee with the given ID is found
+    protected void deleteEmployeeWithID(String employeeId) {
+        if (getEmployeeWithID(employeeId) == null) {
+            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        List<String> remainingLines = readAllFromFile().stream()
+                .filter(l -> !l.startsWith(employeeId + ","))
+                .collect(Collectors.toList());
+
+        writeToFile(remainingLines);
+    }
+
+    // Edits an employee with the specified ID in the .csv file
+    // Throws EmployeeNotFoundException if no employee with the given ID is found
+    // Returns the updated Employee object
+    protected Employee editEmployeeWithID(Employee employee) {
+        String employeeId = employee.getID().toString();
+        if (getEmployeeWithID(employeeId) == null) {
+            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        List<String> updatedLines = readAllFromFile().stream()
+                .map(l -> l.startsWith(employeeId + ",") ? employee.toString() : l)
+                .collect(Collectors.toList());
+
+        writeToFile(updatedLines);
+        return employee;
+    }
+
+    // Retrieves an employee with the specified ID from the .csv file
+    // Returns the Employee object or null if not found
+    protected Employee getEmployeeWithID(String employeeId) {
+        List<Employee> employees = listEmployees();
+        if (employees == null) {
+            return null;
+        }
+        return employees.stream()
+                .filter(e -> e.getID().toString().equals(employeeId))
+                .findFirst().orElse(null);
+    }
+
+    // Initializes the .csv file if it does not exist
     private void initializeFile() {
         File file = new File(this.filePath);
         if (!file.exists()) {
@@ -33,103 +113,23 @@ public class CsvEmployeeManager {
         }
     }
 
-    protected Employee addEmployee(Employee employee)
-    {
-        String employeeId = employee.getID().toString();
-        if (getEmployeeWithID(employeeId) != null) {
-            throw new EmployeeAlreadyExistsException("Employee with ID " + employeeId + " already exists.");
-        }
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.filePath, true))) {
-            //should be to csv string
-            bw.write(employee.toString());
-            bw.newLine();
-            return employee;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    //list employees from CSV
-    protected List<Employee> listEmployees() {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            List<Employee> employees = new ArrayList<>();
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("Id,Name,StartDate,EndDate,Department,Role,Salary")) {
-                    continue;
-                }
-                Employee employee = parseEmployeeFromLine(line);
-                employees.add(employee);
-            }
-            return (employees.isEmpty()) ? null : employees;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot read from nonexistent file with name " + filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    //fire employee with id in csv
-    protected void deleteEmployeeWithID(String employeeId) {
-        if (getEmployeeWithID(employeeId) == null) {
-            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
-        }
-
-        List<String> replacedLines = this.readAllFromFile().stream()
-                .filter(l -> !(l.startsWith(employeeId + ",")))
-                .collect(Collectors.toList());
-
-        this.writeToFile(replacedLines);
-    }
-
-    //edit employee with id in csv
-    //when editing employees the first row gets expanded for some unholy reason
-    protected Employee editEmployeeWithID(Employee employee) {
-        String employeeId = employee.getID().toString();
-        if (getEmployeeWithID(employeeId) == null) {
-            throw new EmployeeNotFoundException("Employee with ID " + employeeId + " does not exist.");
-        }
-
-        var replacedLines = this.readAllFromFile().stream()
-                .map(l -> (l.startsWith(employeeId + ",")) ? employee.toString() : l)
-                .collect(Collectors.toList());
-
-        this.writeToFile(replacedLines);
-        return employee;
-    }
-
-    protected Employee getEmployeeWithID(String employeeId) {
-        List<Employee> employees = listEmployees();
-        if(employees == null)
-        {
-            return null;
-        }
-        return employees.stream()
-                .filter(e -> e.getID().toString().equals(employeeId))
-                .findFirst().orElse(null);
-    }
-
-    //helper methods
-
+    // Parses an employee from a line in the .csv file
+    // Returns an Employee object
     protected Employee parseEmployeeFromLine(String line) {
-        //add some error handling, format checking
-        //although if there is a problem in parsing there must be a problem in writing, so you are in fault
-        //ID,Name,StartDate,EndDate,Department,Role,Salary
+        // Assumes the line format is: ID,Name,StartDate,EndDate,Department,Role,Salary
         String[] contents = line.split(",");
         UUID employeeID = UUID.fromString(contents[0]);
         String employeeName = contents[1];
-        LocalDate startDate = (contents[2].equals("null")) ? null : LocalDate.parse(contents[2]);
-        LocalDate endDate = (contents[3].equals("null")) ? null : LocalDate.parse(contents[3]);
+        LocalDate startDate = contents[2].equals("null") ? null : LocalDate.parse(contents[2]);
+        LocalDate endDate = contents[3].equals("null") ? null : LocalDate.parse(contents[3]);
         Department department = Department.valueOf(contents[4]);
         String role = contents[5];
         double salary = Double.parseDouble(contents[6]);
-        Employee employee = new Employee(employeeID, employeeName, (startDate == null) ? null : new Position(department, role, salary, startDate, endDate));
-
-        return employee;
+        return new Employee(employeeID, employeeName, startDate == null ? null : new Position(department, role, salary, startDate, endDate));
     }
 
+    // Reads all lines from the .csv file
+    // Returns a list of strings, each representing a line in the file
     private List<String> readAllFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
             return br.lines().collect(Collectors.toList());
@@ -140,12 +140,12 @@ public class CsvEmployeeManager {
         }
     }
 
+    // Writes a list of strings to the .csv file
+    // Each string is assumed to be a valid Employee.toString() representation
     private void writeToFile(List<String> lines) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.filePath))) {
-            lines = lines.stream().filter(l -> !l.equals("Id,Name,StartDate,EndDate,Department,Role,Salary"))
-                    .collect(Collectors.toList());
             for (String line : lines) {
-                if (line != null) {
+                if (line != null && !line.isEmpty()) {
                     bw.write(line);
                     bw.newLine();
                 }

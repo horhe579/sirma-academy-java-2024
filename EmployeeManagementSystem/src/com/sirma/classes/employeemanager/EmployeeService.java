@@ -7,15 +7,19 @@ import com.sirma.classes.exceptions.NoEmployeesException;
 
 import java.util.List;
 
+// A service class for managing Employee operations using EmployeeRepository
 public class EmployeeService {
     private EmployeeRepository employeeRepository;
 
+    // Constructor to initialize EmployeeRepository
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
+    // Method to hire a new employee
+    // Takes an Employee object as a parameter
+    // Throws EmployeeAlreadyExistsException if the employee already exists
     public Employee hireEmployee(Employee employee) {
-        //check if exists
         try {
             return this.employeeRepository.createEmployee(employee);
         } catch (EmployeeAlreadyExistsException e) {
@@ -23,8 +27,10 @@ public class EmployeeService {
         }
     }
 
+    // Method to edit an existing employee
+    // Takes an Employee object representing the updated employee as a parameter
+    // Throws EmployeeNotFoundException if the employee does not exist
     public Employee editEmployee(Employee updatedEmployee) {
-        //check if employee exists before updating
         try {
             return this.employeeRepository.updateEmployee(updatedEmployee);
         } catch (EmployeeNotFoundException e) {
@@ -32,6 +38,9 @@ public class EmployeeService {
         }
     }
 
+    // Method to retrieve all employees
+    // Returns a list of Employee objects
+    // Throws NoEmployeesException if no employees are found
     public List<Employee> getEmployees() {
         try {
             return this.employeeRepository.getEmployees();
@@ -40,6 +49,10 @@ public class EmployeeService {
         }
     }
 
+    // Method to retrieve an employee by ID
+    // Takes a String representing the employee ID as a parameter
+    // Returns an Employee object
+    // Throws EmployeeNotFoundException if the employee does not exist
     public Employee getEmployeeByID(String employeeID) {
         try {
             return this.employeeRepository.getEmployee(employeeID);
@@ -48,8 +61,10 @@ public class EmployeeService {
         }
     }
 
+    // Method to fire an employee by ID
+    // Takes a String representing the employee ID as a parameter
+    // Throws EmployeeNotFoundException if the employee does not exist
     public void fireEmployee(String employeeID) {
-        //check if employee exists before firing
         try {
             this.employeeRepository.deleteEmployee(employeeID);
         } catch (EmployeeNotFoundException e) {
