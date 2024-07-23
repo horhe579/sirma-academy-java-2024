@@ -15,15 +15,15 @@ public class EmployeeManager {
     private EmployeeService employeeService;
 
     static {
-        VALID_COMMANDS.put("Add Employee", 4);
-        VALID_COMMANDS.put("Add", 4);
-        VALID_COMMANDS.put("Edit Employee", 4);
-        VALID_COMMANDS.put("Edit", 4);
-        VALID_COMMANDS.put("Fire Employee", 1);
-        VALID_COMMANDS.put("Fire", 1);
-        VALID_COMMANDS.put("Get Employee", 1);
-        VALID_COMMANDS.put("Get", 1);
-        VALID_COMMANDS.put("Get Employees", 0);
+        VALID_COMMANDS.put("add employee", 4);
+        VALID_COMMANDS.put("add", 4);
+        VALID_COMMANDS.put("edit employee", 4);
+        VALID_COMMANDS.put("edit", 4);
+        VALID_COMMANDS.put("fire employee", 1);
+        VALID_COMMANDS.put("fire", 1);
+        VALID_COMMANDS.put("get employee", 1);
+        VALID_COMMANDS.put("get", 1);
+        VALID_COMMANDS.put("get employees", 0);
     }
 
     public EmployeeManager(String filePath) {
@@ -34,10 +34,11 @@ public class EmployeeManager {
 
     public void executeCommand(String command) {
         Scanner sc = new Scanner(System.in);
+        command = command.toLowerCase();
 
         switch (command) {
-            case "Add Employee":
-            case "Add":
+            case "add employee":
+            case "add":
                 System.out.println("Enter the employee information in the following format: NAME, DEPARTMENT, ROLE, SALARY");
                 try {
                     String[] fields = sc.nextLine().split("[, ]+");
@@ -47,8 +48,8 @@ public class EmployeeManager {
                 }
                 break;
 
-            case "Edit Employee":
-            case "Edit":
+            case "edit employee":
+            case "edit":
                 System.out.println("Enter the ID of the employee to edit:");
                 try {
                     String employeeId = sc.nextLine();
@@ -60,8 +61,8 @@ public class EmployeeManager {
                 }
                 break;
 
-            case "Fire Employee":
-            case "Fire":
+            case "fire employee":
+            case "fire":
                 System.out.println("Enter the ID of the employee to fire:");
                 try {
                     String employeeId = sc.nextLine();
@@ -71,8 +72,8 @@ public class EmployeeManager {
                 }
                 break;
 
-            case "Get Employee":
-            case "Get":
+            case "get employee":
+            case "get":
                 System.out.println("Enter the ID of the employee to retrieve:");
                 try {
                     String employeeId = sc.nextLine();
@@ -82,10 +83,9 @@ public class EmployeeManager {
                 }
                 break;
 
-            case "Get Employees":
+            case "get employees":
                 this.handleListEmployees();
                 break;
-
             default:
                 System.err.println("Unknown command: " + command);
                 break;
@@ -104,10 +104,8 @@ public class EmployeeManager {
             Position position = new Position(parsedDepartment, role, parsedSalary);
             Employee employee = new Employee(name, position);
             System.out.println("Added employee " + this.employeeService.hireEmployee(employee).toString());
-        }
-        catch (EmployeeAlreadyExistsException e)
-        {
-            throw new EmployeeNotFoundException(e.getMessage());
+        } catch (EmployeeAlreadyExistsException e) {
+            throw new EmployeeAlreadyExistsException(e.getMessage());
         }
     }
 
