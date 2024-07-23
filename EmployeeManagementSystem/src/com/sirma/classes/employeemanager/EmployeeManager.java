@@ -16,13 +16,9 @@ public class EmployeeManager {
 
     static {
         VALID_COMMANDS.put("add employee", 4);
-        VALID_COMMANDS.put("add", 4);
         VALID_COMMANDS.put("edit employee", 4);
-        VALID_COMMANDS.put("edit", 4);
         VALID_COMMANDS.put("fire employee", 1);
-        VALID_COMMANDS.put("fire", 1);
         VALID_COMMANDS.put("get employee", 1);
-        VALID_COMMANDS.put("get", 1);
         VALID_COMMANDS.put("get employees", 0);
     }
 
@@ -42,6 +38,10 @@ public class EmployeeManager {
                 System.out.println("Enter the employee information in the following format: NAME, DEPARTMENT, ROLE, SALARY");
                 try {
                     String[] fields = sc.nextLine().split("[, ]+");
+                    if(fields.length != VALID_COMMANDS.get("add"))
+                    {
+                        throw new IllegalArgumentException("Invalid field count.");
+                    }
                     this.handleAddEmployee(fields[0], fields[1], fields[2], fields[3]);
                 } catch (IllegalArgumentException | EmployeeAlreadyExistsException e) {
                     System.err.println(e.getMessage());
@@ -55,6 +55,10 @@ public class EmployeeManager {
                     String employeeId = sc.nextLine();
                     System.out.println("Enter the updated employee information in the following format: NAME, DEPARTMENT, ROLE, SALARY");
                     String[] fields = sc.nextLine().split("[, ]+");
+                    if(fields.length != VALID_COMMANDS.get("edit"))
+                    {
+                        throw new IllegalArgumentException("Invalid field count.");
+                    }
                     this.handleEditEmployee(employeeId, fields[0], fields[1], fields[2], fields[3]);
                 } catch (IllegalArgumentException | EmployeeNotFoundException e) {
                     System.err.println(e.getMessage());
