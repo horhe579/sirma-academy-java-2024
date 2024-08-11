@@ -1,3 +1,4 @@
-Id,Name,StartDate,EndDate,Department,Role,SalaryId,Name,StartDate,EndDate,Department,Role,SalaryId,Name,StartDate,EndDate,Department,Role,SalaryId,Name,StartDate,EndDate,Department,Role,Salary5aeaa911-287e-47ee-b2cf-7917c4d147c1,Jan,2024-07-21,null,IT,Manager,2000.0
-6935b116-05e2-450a-a09f-0027ce549ff7,Peter,2024-07-21,null,IT,Min,1000.0
-107527d5-b999-4748-88ed-ddb238ffd108,Irina,2024-07-21,null,IT,junior,200.0
+f1266090-948e-41c6-9e8c-9aa2df66b4d7,Gosho,2024-07-22,null,IT,Support,3000.0
+712ab8bb-1b30-400a-8751-b0b29b79dd8b,GoshoFake,2024-07-22,null,HR,j,4.0
+603c4ede-71eb-44e7-98c5-b1090b58074c,Gosho,2024-07-22,null,IT,Support,3000.0
+d031d0ff-d0c7-4842-b30f-ece9a468b370,Petya,2024-07-23,null,IT,k,10.0
