@@ -3,7 +3,9 @@ package com.sirma.TaskManager.controllers;
 import com.sirma.TaskManager.models.Task;
 import com.sirma.TaskManager.repositories.TaskRepository;
 import com.sirma.TaskManager.services.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,7 +35,7 @@ public class TaskController {
 
     //CREATE TASK
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
+    public Task createTask(@RequestBody @Valid Task task) {
         return this.taskService.createTask(task);
     }
 

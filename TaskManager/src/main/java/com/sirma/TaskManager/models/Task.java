@@ -3,6 +3,7 @@ package com.sirma.TaskManager.models;
 
 import com.sirma.TaskManager.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.lang.NonNull;
@@ -11,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDate;
 
 @Entity
-@Validated
+@Valid
 @Table(name = "tasks")
 public class Task {
 
@@ -25,6 +26,9 @@ public class Task {
     private boolean status;
     private LocalDate dueDate;
 
+
+    public Task() {
+    }
 
     public Task(String title, String description, boolean status, LocalDate dueDate) {
         this.title = title;
