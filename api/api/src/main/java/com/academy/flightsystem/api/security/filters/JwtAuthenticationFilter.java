@@ -1,10 +1,12 @@
 package com.academy.flightsystem.api.security.filters;
 
+import com.academy.flightsystem.api.repository.UserRepository;
 import com.academy.flightsystem.api.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,12 +29,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver, JwtService jwtService, @Lazy UserDetailsService userDetailsService) {
+
+    public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver, @Lazy JwtService jwtService, @Lazy UserDetailsService userDetailsService) {
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -77,9 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         catch (Exception e){
             handlerExceptionResolver.resolveException(request, response, null, e);
-            //response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-
 
     }
 }
