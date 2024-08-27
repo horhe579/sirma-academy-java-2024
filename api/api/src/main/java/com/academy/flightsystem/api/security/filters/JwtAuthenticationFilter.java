@@ -22,6 +22,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
+// Used for extracting and validating a JSON Web Token from the Authorization Header
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -80,7 +82,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         catch (Exception e){
             handlerExceptionResolver.resolveException(request, response, null, e);
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
 
     }

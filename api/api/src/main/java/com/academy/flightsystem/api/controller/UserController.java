@@ -3,6 +3,9 @@ package com.academy.flightsystem.api.controller;
 import com.academy.flightsystem.api.entity.User;
 import com.academy.flightsystem.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
@@ -13,8 +16,22 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
+
     private UserService userService;
+
+    public UserController(UserService userService)
+    {
+        this.userService = userService;
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> authenticatedUser()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(currentUser);
+    }
 
     @GetMapping("/{userId}")
     public Optional<User> getUserById(@PathVariable Long userId)
@@ -23,9 +40,11 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> getAllUsers()
+    public ResponseEntity<Iterable<User>> getAllUsers()
     {
-        return this.userService.getAllUsers();
+        List<User> users = this.userService.getAllUsers();
+
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping
