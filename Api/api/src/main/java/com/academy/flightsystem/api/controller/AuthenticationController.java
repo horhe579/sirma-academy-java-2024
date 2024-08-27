@@ -4,13 +4,12 @@ import com.academy.flightsystem.api.dto.LoginUserDTO;
 import com.academy.flightsystem.api.dto.RegisterUserDTO;
 import com.academy.flightsystem.api.security.jwt.JwtService;
 import com.academy.flightsystem.api.service.AuthenticationService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import responses.LoginResponse;
+import com.academy.flightsystem.api.dto.responses.LoginResponseDTO;
 import com.academy.flightsystem.api.entity.User;
 
 @RequestMapping("/auth")
@@ -34,14 +33,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDTO)
+    public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDTO)
     {
         User authenticatedUser = authenticationService.authenticate(loginUserDTO);
         String jwt = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwt);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+        loginResponseDTO.setToken(jwt);
+        loginResponseDTO.setExpiresIn(jwtService.getExpirationTime());
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(loginResponseDTO);
     }
 }

@@ -1,5 +1,7 @@
 package com.academy.flightsystem.api.configs;
 
+import com.academy.flightsystem.api.dto.responses.GetUserResponseDTO;
+import com.academy.flightsystem.api.entity.User;
 import com.academy.flightsystem.api.repository.UserRepository;
 import com.academy.flightsystem.api.security.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,11 +24,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserRepository userRepository;
@@ -34,6 +42,14 @@ public class SecurityConfig {
     public SecurityConfig(UserRepository userRepository, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userRepository = userRepository;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
+    @Bean
+    BiFunction<Optional<GetUserResponseDTO>, Long, Boolean> owner()
+    {
+        return (user, userId) -> user
+                .filter(u -> Objects.equals(u.getId(), userId))
+                .isPresent();
     }
 
     @Bean
