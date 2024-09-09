@@ -1,4 +1,4 @@
-package com.sirma.finalexam.matchanalyzer.entity;
+package com.sirma.finalexam.matchanalyzer.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -22,10 +22,11 @@ public class Team {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Size(min = 2)
     @Column(nullable = false, unique = true)
     private String managerFullName;
 
     @Column(nullable = false)
-    private char group;
+    private char groupName;
 
 }

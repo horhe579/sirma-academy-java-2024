@@ -1,10 +1,7 @@
-package com.sirma.finalexam.matchanalyzer.entity;
+package com.sirma.finalexam.matchanalyzer.entities;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -18,12 +15,17 @@ import lombok.NoArgsConstructor;
 @Table(name = "records")
 public class Record {
 
-    @ManyToOne
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
     @Max(value = 90, message = "To must be at most 90.")
@@ -31,6 +33,7 @@ public class Record {
     @Column(nullable = false)
     private Integer fromMinutes;
 
+    //NULL value indicates a player played until the end of the match
     @Max(value = 90, message = "To must be at most 90.")
     private Integer toMinutes;
 }

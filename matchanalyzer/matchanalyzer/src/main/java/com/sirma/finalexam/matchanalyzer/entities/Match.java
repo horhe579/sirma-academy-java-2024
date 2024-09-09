@@ -1,4 +1,4 @@
-package com.sirma.finalexam.matchanalyzer.entity;
+package com.sirma.finalexam.matchanalyzer.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,11 +21,11 @@ public class Match {
 
     //Add validation to not have the same ID of team A and B in a match(maybe in the service)
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "teamA_id", nullable = false)
     private Team teamA;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "teamB_id", nullable = false)
     private Team teamB;
 
     @Column(nullable = false)

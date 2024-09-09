@@ -1,4 +1,4 @@
-package com.sirma.finalexam.matchanalyzer.entity;
+package com.sirma.finalexam.matchanalyzer.entities;
 
 import com.sirma.finalexam.matchanalyzer.enums.PlayerPosition;
 import jakarta.persistence.*;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "players")
-
 public class Player {
 
     @Id
@@ -25,9 +24,10 @@ public class Player {
     private String fullName;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
+    @Enumerated(EnumType.STRING)
     @Size(max = 2, min = 2)
     @Column(nullable = false)
     private PlayerPosition position;
