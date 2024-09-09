@@ -19,7 +19,7 @@ public class Match {
     //Thus messing up the relations completely
     //If implementing CRUD operations i have to find a way to generate IDs efficiently and in a slick way
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     //Add validation to not have the same ID of team A and B in a match(maybe in the service)

@@ -99,7 +99,14 @@ public class CsvTeamProcessor implements CsvParser<Team> {
     @Override
     public void saveBatch(List<Team> entries) {
         //LOGGER.info("Saving...");
-        this.teamRepository.saveAll(entries);
+        List<Long> ids = entries.stream().map(Team::getId).toList();
+        List<Long> existingIds = this.teamRepository.getExistingIds(ids);
+        List<Team> teams = entries.stream()
+                .filter(t -> !existingIds.contains(t.getId()))
+                .toList();
+        if(!teams.isEmpty()) {
+            this.teamRepository.saveAll(teams);
+        }
         //LOGGER.info("Saved.");
     }
 }

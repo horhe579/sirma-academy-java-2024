@@ -17,7 +17,7 @@ public class Record {
 
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     @ManyToOne
