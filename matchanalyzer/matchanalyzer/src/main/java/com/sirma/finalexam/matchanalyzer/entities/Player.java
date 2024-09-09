@@ -15,9 +15,12 @@ import lombok.NoArgsConstructor;
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+
+    @Column(nullable = false)
+    private Long teamNumber;
 
     @Size(min = 1)
     @Column(nullable = false)
@@ -28,10 +31,6 @@ public class Player {
     private Team team;
 
     @Enumerated(EnumType.STRING)
-    @Size(max = 2, min = 2)
     @Column(nullable = false)
     private PlayerPosition position;
-
-
-
 }

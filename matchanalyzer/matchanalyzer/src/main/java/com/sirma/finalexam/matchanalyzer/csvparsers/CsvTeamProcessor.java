@@ -1,6 +1,5 @@
 package com.sirma.finalexam.matchanalyzer.csvparsers;
 
-import com.sirma.finalexam.matchanalyzer.entities.Match;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.exceptions.InvalidTeamFormatException;
 import com.sirma.finalexam.matchanalyzer.interfaces.CsvParser;
@@ -37,7 +36,6 @@ public class CsvTeamProcessor implements CsvParser<Team> {
             int linesRead = 0;
             while((line = br.readLine()) != null)
             {
-                //Skip the header
                 if(linesRead == 0)
                 {
                     linesRead++;
@@ -45,17 +43,20 @@ public class CsvTeamProcessor implements CsvParser<Team> {
                 }
                 linesRead++;
                 Team team = parseEntry(line);
-                teams.add(team);
+                if(team != null)
+                {
+                    teams.add(team);
+                }
                 if(teams.size() == BATCH_SIZE)
                 {
-                    LOGGER.info("Saving batch of teams with a size of {}", teams.size());
+                    //LOGGER.info("Saving batch of teams with a size of {}", teams.size());
                     saveBatch(teams);
-                    teams.clear();
+                    teams.clear();//
                 }
             }
             if(!teams.isEmpty())
             {
-                LOGGER.info("Saving batch of teams with a size of {}", teams.size());
+                //LOGGER.info("Saving batch of teams with a size of {}", teams.size());
                 saveBatch(teams);
             }
         }
@@ -63,38 +64,42 @@ public class CsvTeamProcessor implements CsvParser<Team> {
 
     @Override
     public Team parseEntry(String csvLine) {
-        //Line format
-        //ID,Name,ManagerFullName,Group
-        //1,Germany,Julian Nagelsmann,A
-        String [] teamFields = csvLine.split(",");
-        Long teamId = Long.parseLong(teamFields[0]);
-        String teamName = teamFields[1];
-        try{
+        // Line format: ID,Name,ManagerFullName,Group
+        // Example: 1,Germany,Julian Nagelsmann,A
+        String[] teamFields = csvLine.split(",");
+        Long teamId = null;
+
+        try {
+            teamId = Long.parseLong(teamFields[0]);
+            String teamName = teamFields[1];
             String managerFullName = teamFields[2];
-            if(managerFullName.length() < 2)
-            {
-                throw new InvalidTeamFormatException("Invalid length of field 'managerFullName', minimal length: 2, current length: " + managerFullName.length());
-            }
-            String teamGroup = teamFields[3].toUpperCase(Locale.ROOT);
-            if(teamGroup.length() != 1)
-            {
-                throw new InvalidTeamFormatException("Invalid length of field 'group, length must be 1, current length: " + managerFullName.length());
+
+            if (managerFullName.length() < 2) {
+                throw new InvalidTeamFormatException("Invalid length for field 'managerFullName', minimal length: 2, current length: " + managerFullName.length());
             }
 
-            return new Team(teamId,teamName, managerFullName, teamGroup.charAt(0));
+            String teamGroup = teamFields[3].toUpperCase(Locale.ROOT);
+            if (teamGroup.length() != 1) {
+                throw new InvalidTeamFormatException("Invalid length for field 'group', length must be 1, current length: " + teamGroup.length());
+            }
+
+            return new Team(teamId, teamName, managerFullName, teamGroup.charAt(0));
+
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Skipping team with invalid number format in line {}: {}", csvLine, e.getMessage());
+        } catch (RuntimeException e) {
+            LOGGER.warn("Skipping team with ID {}: {}", teamId, e.getMessage());
         }
-        catch (RuntimeException e)
-        {
-            LOGGER.warn("Skipping team with ID {} due to invalid line formatting: {}", teamId, e.getMessage());
-            return null;
-        }
+
+        return null;
     }
+
 
     @Transactional
     @Override
     public void saveBatch(List<Team> entries) {
-        LOGGER.info("Saving...");
+        //LOGGER.info("Saving...");
         this.teamRepository.saveAll(entries);
-        LOGGER.info("Saved.");
+        //LOGGER.info("Saved.");
     }
 }

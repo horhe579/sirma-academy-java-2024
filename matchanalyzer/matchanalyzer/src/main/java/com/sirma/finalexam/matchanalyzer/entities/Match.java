@@ -15,7 +15,10 @@ import java.time.LocalDate;
 public class Match {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //Removed generated value annotation since it is higher priority and overrides the id i set in the constructor
+    //Thus messing up the relations completely
+    //If implementing CRUD operations i have to find a way to generate IDs efficiently and in a slick way
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 
@@ -33,4 +36,5 @@ public class Match {
 
     @Column(nullable = false)
     private String score;
+
 }
