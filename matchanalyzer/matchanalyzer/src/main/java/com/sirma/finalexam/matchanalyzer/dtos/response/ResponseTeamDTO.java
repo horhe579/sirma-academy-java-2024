@@ -1,4 +1,4 @@
-package com.sirma.finalexam.matchanalyzer.dtos;
+package com.sirma.finalexam.matchanalyzer.dtos.response;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTeamDTO {
+public class ResponseTeamDTO {
 
     private String name;
 

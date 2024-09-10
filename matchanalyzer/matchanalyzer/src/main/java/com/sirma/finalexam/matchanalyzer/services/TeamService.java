@@ -1,7 +1,8 @@
 package com.sirma.finalexam.matchanalyzer.services;
 
-import com.sirma.finalexam.matchanalyzer.dtos.CreateTeamDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
+import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
 import com.sirma.finalexam.matchanalyzer.repositories.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,8 @@ public class TeamService {
 
     public List<Team> getAllTeams()
     {
-        return this.teamRepository.findAll();
+        List<Team> teams = this.teamRepository.findAll();
+        return teams;
     }
 
     public Optional<Team> getTeamById(Long teamId)
@@ -45,21 +47,29 @@ public class TeamService {
     }
 
     @Transactional
-    public Team updateTeam(Long teamId, Team updatedTeam)
+    public Team updateTeam(Long teamId, CreateTeamDTO updatedTeam)
     {
         //add validation to see if manager already has a team
         Team team = this.teamRepository.findById(teamId).orElseThrow();
         team.setGroupName(updatedTeam.getGroupName());
         team.setName(updatedTeam.getName());
         team.setManagerFullName(updatedTeam.getManagerFullName());
+        this.teamRepository.save(team);
 
         return team;
     }
 
     //add authorization so only admins can delete
-    public void deleteTeamById(Long teamId)
+    public boolean deleteTeamById(Long teamId)
     {
-        this.teamRepository.deleteById(teamId);
+        try {
+            Team team = this.teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("Team with ID "
+                    + teamId + " not found."));
+            this.teamRepository.delete(team);
+            return true;
+        } catch (TeamNotFoundException e) {
+            return false;
+        }
     }
 
     private Long generateUniqueId()
