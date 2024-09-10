@@ -38,7 +38,11 @@ public class TeamController {
     public ResponseEntity<Team> createTeam(@RequestBody CreateTeamDTO teamDTO)
     {
         Team team = this.teamService.createTeam(teamDTO);
-        return ResponseEntity.ok(team);
+        if(team!=null)
+        {
+            return ResponseEntity.ok(team);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{teamId}")
