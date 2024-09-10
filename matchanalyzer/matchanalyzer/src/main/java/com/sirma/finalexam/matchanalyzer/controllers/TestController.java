@@ -4,7 +4,10 @@ import com.sirma.finalexam.matchanalyzer.csvparsers.CsvMatchProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvPlayerProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvRecordProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvTeamProcessor;
+import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.PlayerRecordForMatchDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.ResponseRecordDTO;
 import com.sirma.finalexam.matchanalyzer.repositories.RecordRepository;
+import com.sirma.finalexam.matchanalyzer.services.PlayerAnalysisService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/test")
@@ -21,16 +25,16 @@ public class TestController {
     private CsvPlayerProcessor csvPlayerProcessor;
     private CsvTeamProcessor csvTeamProcessor;
     private CsvRecordProcessor csvRecordProcessor;
-    private RecordRepository recordRepository;
+    private PlayerAnalysisService playerAnalysisService;
 
     public TestController(CsvMatchProcessor csvMatchProcessor, CsvPlayerProcessor csvPlayerProcessor,
                           CsvTeamProcessor csvTeamProcessor, CsvRecordProcessor csvRecordProcessor,
-                          RecordRepository recordRepository) {
+                          PlayerAnalysisService playerAnalysisService) {
         this.csvMatchProcessor = csvMatchProcessor;
         this.csvPlayerProcessor = csvPlayerProcessor;
         this.csvTeamProcessor = csvTeamProcessor;
         this.csvRecordProcessor = csvRecordProcessor;
-        this.recordRepository = recordRepository;
+        this.playerAnalysisService = playerAnalysisService;
     }
 
     @Transactional
@@ -42,10 +46,10 @@ public class TestController {
         csvRecordProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\records.csv");
     }
 
-    @GetMapping("/allrecords")
-    public ResponseEntity<List<Object[]>> getAllRecords()
+    @GetMapping("/allRecords")
+    public ResponseEntity<Map<Long, List<PlayerRecordForMatchDTO>>> getAllRecords()
     {
-        return ResponseEntity.ok(this.recordRepository.getAllPlayerRecords());
+        return ResponseEntity.ok(this.playerAnalysisService.getPlayerTimeForAllMatches());
     }
 
 }
