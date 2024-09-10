@@ -43,6 +43,7 @@ public class PlayerService {
         return this.playerRepository.findById(playerId);
     }
 
+    @Transactional
     public Player createPlayer(CreatePlayerDTO playerDTO)
     {
         //add validation to see if manager already has a team
