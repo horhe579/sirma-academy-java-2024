@@ -101,6 +101,13 @@ public class CsvPlayerProcessor implements CsvParser<Player> {
     @Transactional
     @Override
     public void saveBatch(List<Player> entries) {
-        this.playerRepository.saveAll(entries);
+        List<Long> ids = entries.stream().map(Player::getId).toList();
+        List<Long> existingIds = this.playerRepository.getExistingIds(ids);
+        List<Player> players = entries.stream()
+                .filter(t -> !existingIds.contains(t.getId()))
+                .toList();
+        if(!players.isEmpty()) {
+            this.playerRepository.saveAll(players);
+        }
     }
 }

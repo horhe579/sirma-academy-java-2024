@@ -3,6 +3,7 @@ package com.sirma.finalexam.matchanalyzer.csvparsers;
 import com.sirma.finalexam.matchanalyzer.entities.Match;
 import com.sirma.finalexam.matchanalyzer.entities.Player;
 import com.sirma.finalexam.matchanalyzer.entities.Record;
+import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.exceptions.*;
 import com.sirma.finalexam.matchanalyzer.interfaces.CsvParser;
 import com.sirma.finalexam.matchanalyzer.repositories.MatchRepository;
@@ -115,6 +116,13 @@ public class CsvRecordProcessor implements CsvParser<Record> {
     @Transactional
     @Override
     public void saveBatch(List<Record> entries) {
-        this.recordRepository.saveAll(entries);
+        List<Long> ids = entries.stream().map(Record::getId).toList();
+        List<Long> existingIds = this.recordRepository.getExistingIds(ids);
+        List<Record> records = entries.stream()
+                .filter(t -> !existingIds.contains(t.getId()))
+                .toList();
+        if(!records.isEmpty()) {
+            this.recordRepository.saveAll(records);
+        }
     }
 }

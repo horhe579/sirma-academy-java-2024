@@ -22,6 +22,7 @@ public class TeamService {
         this.idGenerationService = idGenerationService;
     }
 
+    //implement returning responses if needed
     public List<Team> getAllTeams()
     {
         List<Team> teams = this.teamRepository.findAll();

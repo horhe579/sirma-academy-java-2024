@@ -116,6 +116,12 @@ public class CsvMatchProcessor implements CsvParser<Match> {
     @Transactional
     @Override
     public void saveBatch(List<Match> entries) {
-        this.matchRepository.saveAll(entries);
-    }
+        List<Long> ids = entries.stream().map(Match::getId).toList();
+        List<Long> existingIds = this.matchRepository.getExistingIds(ids);
+        List<Match> matches = entries.stream()
+                .filter(t -> !existingIds.contains(t.getId()))
+                .toList();
+        if(!matches.isEmpty()) {
+            this.matchRepository.saveAll(matches);
+        }    }
 }
