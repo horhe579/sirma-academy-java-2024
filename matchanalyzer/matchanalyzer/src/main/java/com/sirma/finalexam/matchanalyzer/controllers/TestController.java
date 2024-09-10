@@ -4,9 +4,8 @@ import com.sirma.finalexam.matchanalyzer.csvparsers.CsvMatchProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvPlayerProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvRecordProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvTeamProcessor;
-import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.PlayerRecordForMatchDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.ResponseRecordDTO;
-import com.sirma.finalexam.matchanalyzer.repositories.RecordRepository;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerRecordForMatchDTO;
 import com.sirma.finalexam.matchanalyzer.services.PlayerAnalysisService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +45,16 @@ public class TestController {
         csvRecordProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\records.csv");
     }
 
-    @GetMapping("/allRecords")
-    public ResponseEntity<Map<Long, List<PlayerRecordForMatchDTO>>> getAllRecords()
+//    @GetMapping("/allRecords")
+//    public ResponseEntity<Map<Long, List<PlayerRecordForMatchDTO>>> getAllRecords()
+//    {
+//        return ResponseEntity.ok(this.playerAnalysisService.getPlayerTimeForAllMatches());
+//    }
+
+    @GetMapping("/hopeThisWorks")
+    public ResponseEntity<Map<PlayerPairDTO, Long>> getPlayerPairTimeTogether()
     {
-        return ResponseEntity.ok(this.playerAnalysisService.getPlayerTimeForAllMatches());
+        return ResponseEntity.ok(this.playerAnalysisService.getTimeTogetherMapTestFunctionToBeRemoved());
     }
 
 }

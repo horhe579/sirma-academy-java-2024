@@ -1,4 +1,4 @@
-package com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis;
+package com.sirma.finalexam.matchanalyzer.dtos.playeranalysis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

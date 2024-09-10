@@ -1,6 +1,5 @@
 package com.sirma.finalexam.matchanalyzer.repositories;
 
-import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.ResponseRecordDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Record;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

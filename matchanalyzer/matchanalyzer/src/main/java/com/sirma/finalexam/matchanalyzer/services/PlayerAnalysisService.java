@@ -1,8 +1,10 @@
 package com.sirma.finalexam.matchanalyzer.services;
 
-import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.PlayerRecordForMatchDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.response.playeranalysis.ResponseRecordDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerRecordForMatchDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.ResponseRecordDTO;
 import com.sirma.finalexam.matchanalyzer.repositories.RecordRepository;
+import com.sirma.finalexam.matchanalyzer.util.PlayerPairTimeCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
 public class PlayerAnalysisService {
 
     private RecordRepository recordRepository;
+    private PlayerPairTimeCalculator timeCalculator;
 
-    public PlayerAnalysisService(RecordRepository recordRepository) {
+    public PlayerAnalysisService(RecordRepository recordRepository, PlayerPairTimeCalculator calculator) {
         this.recordRepository = recordRepository;
+        this.timeCalculator = calculator;
     }
 
     public List<ResponseRecordDTO> getAllRecords()
@@ -36,9 +40,9 @@ public class PlayerAnalysisService {
         return null;
     }
 
-    public Map<Long, List<PlayerRecordForMatchDTO>> getPlayerTimeForAllMatches()
+    private Map<Long, List<PlayerRecordForMatchDTO>> getPlayerTimeForAllMatches()
     {
-        //records in the format - matchId, playerId, from, to
+        //records in the format       matchId -> List<{ playerId, from, to }>
         List<Object[]> records = this.recordRepository.getAllPlayerRecords();
 
         Map<Long, List<PlayerRecordForMatchDTO>> response = records.stream()
@@ -46,6 +50,16 @@ public class PlayerAnalysisService {
                         (this::getMatchId, Collectors.mapping(this::getPlayerRecordForMatchDTO, Collectors.toList())));
 
         return response;
+    }
+
+    public Map<PlayerPairDTO, Long> getTimeTogetherMapTestFunctionToBeRemoved()
+    {
+        //make it accept a repo or something
+        Map<Long, List<PlayerRecordForMatchDTO>> arg1 = getPlayerTimeForAllMatches();
+
+        this.timeCalculator.processMatchRecords(arg1);
+
+        return this.timeCalculator.getPlayerPairTimeTogetherMap();
     }
 
     private Long getMatchId(Object[] record)
