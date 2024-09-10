@@ -1,7 +1,6 @@
 package com.sirma.finalexam.matchanalyzer.services;
 
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreatePlayerDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Player;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.enums.PlayerPosition;
@@ -10,6 +9,8 @@ import com.sirma.finalexam.matchanalyzer.exceptions.PlayerNotFoundException;
 import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
 import com.sirma.finalexam.matchanalyzer.repositories.PlayerRepository;
 import com.sirma.finalexam.matchanalyzer.repositories.TeamRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class PlayerService {
     //ID,TeamNumber,Position,FullName,TeamID
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerService.class);
     private PlayerRepository playerRepository;
     private TeamRepository teamRepository;
     private IdGenerationService<Player> idGenerationService;
@@ -84,6 +86,7 @@ public class PlayerService {
             player.setTeamNumber(teamNumber);
             return this.playerRepository.save(player);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             //if time left make global exc handler
             return null;
         }
@@ -92,12 +95,44 @@ public class PlayerService {
     @Transactional
     public Player updatePlayer(Long playerId, CreatePlayerDTO updatedPlayer)
     {
-        //add validation to see if manager already has a team
-        Player player = this.playerRepository.findById(playerId).orElseThrow();
-        //finish
-        this.playerRepository.save(player);
 
-        return player;
+        String fullName = updatedPlayer.getFullName();
+        Long teamId = updatedPlayer.getTeamId();
+        Long teamNumber = updatedPlayer.getTeamNumber();
+        String position = updatedPlayer.getPosition();
+
+        try {
+            Player player = this.playerRepository.findById(playerId)
+                    .orElseThrow(() -> new PlayerNotFoundException("Player with ID " + playerId + " does not exist."));
+
+
+            Team team = teamRepository.findById(teamId)
+                    .orElseThrow(() -> new TeamNotFoundException("Team with ID "
+                            + teamId + " does not exist."));
+
+            boolean existsByName = playerRepository.existsByFullNameAndTeamIdAndIdNot(fullName, teamId, playerId);
+            if (existsByName) {
+                throw new PlayerAlreadyExistsException("Player with name " + fullName + " already exists on team with ID " + teamId);
+            }
+
+
+            boolean existsByNumber = playerRepository.existsByTeamNumberAndTeamIdAndIdNot(teamNumber, teamId, playerId);
+            if (existsByNumber) {
+                throw new PlayerAlreadyExistsException("Player with team number " + teamNumber + " already exists on team with ID " + teamId);
+            }
+
+
+            PlayerPosition playerPosition = PlayerPosition.fromString(position);
+
+            player.setPosition(playerPosition);
+            player.setTeam(team);
+            player.setFullName(fullName);
+            player.setTeamNumber(teamNumber);
+            return this.playerRepository.save(player);
+        } catch (RuntimeException e) {
+            //if time left make global exc handler
+            return null;
+        }
     }
 
     //add authorization so only admins can delete

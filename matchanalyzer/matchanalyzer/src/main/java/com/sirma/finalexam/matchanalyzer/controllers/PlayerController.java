@@ -51,7 +51,10 @@ public class PlayerController {
     public ResponseEntity<Player> updatePlayer(@PathVariable Long playerId, @RequestBody CreatePlayerDTO updatedPlayer)
     {
         Player player = this.playerService.updatePlayer(playerId, updatedPlayer);
-        return ResponseEntity.ok(player);
+        if(player!=null) {
+            return ResponseEntity.ok(player);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/{playerId}")
