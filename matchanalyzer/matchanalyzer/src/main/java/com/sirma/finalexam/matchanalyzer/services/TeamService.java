@@ -80,13 +80,34 @@ public class TeamService {
     {
         //implement logic similar to creation of team
         //add validation to see if manager already has a team
-        Team team = this.teamRepository.findById(teamId).orElseThrow();
-        team.setGroupName(updatedTeam.getGroupName());
-        team.setName(updatedTeam.getName());
-        team.setManagerFullName(updatedTeam.getManagerFullName());
-        this.teamRepository.save(team);
+        char groupName = updatedTeam.getGroupName();
+        String teamName = updatedTeam.getName();
+        String managerFullName = updatedTeam.getManagerFullName();
 
-        return team;
+        try {
+            Team team = this.teamRepository.findById(teamId)
+                    .orElseThrow(() -> new TeamNotFoundException("Team with ID " + teamId + " not found."));
+
+            boolean managerHasTeam = teamRepository.existsByManagerFullNameAndIdNot(managerFullName, teamId);
+            boolean teamWithNameExists = teamRepository.existsByNameAndIdNot(teamName, teamId);
+
+            if(managerHasTeam)
+            {
+                throw new TeamManagerException("Manager with name " + managerFullName + " is already associated with another team.");
+            }
+            if(teamWithNameExists)
+            {
+                throw new TeamNameException("Team with name " + teamName + " already exists.");
+            }
+
+            team.setGroupName(updatedTeam.getGroupName());
+            team.setName(updatedTeam.getName());
+            team.setManagerFullName(updatedTeam.getManagerFullName());
+            return this.teamRepository.save(team);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
     }
 
     //add authorization so only admins can delete

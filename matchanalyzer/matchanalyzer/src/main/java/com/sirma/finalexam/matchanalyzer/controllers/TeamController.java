@@ -50,7 +50,11 @@ public class TeamController {
     public ResponseEntity<Team> updateTeam(@PathVariable Long teamId, @RequestBody CreateTeamDTO updatedTeam)
     {
         Team team = this.teamService.updateTeam(teamId, updatedTeam);
-        return ResponseEntity.ok(team);
+        if(team!=null)
+        {
+            return ResponseEntity.ok(team);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/{teamId}")

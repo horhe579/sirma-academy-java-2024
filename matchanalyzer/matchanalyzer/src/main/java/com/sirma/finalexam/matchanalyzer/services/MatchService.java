@@ -62,11 +62,11 @@ public class MatchService {
         //Check if Score is valid by using regex(Create a class to check this, the regex is found in the CSV match parser)
         Long aTeamId = matchDTO.getATeamId();
         Long bTeamId = matchDTO.getBTeamId();
-        LOGGER.info("Team a id:{} team b id:{}", aTeamId, bTeamId);
+        //LOGGER.info("Team a id:{} team b id:{}", aTeamId, bTeamId);
         String score = matchDTO.getScore();
-        LOGGER.info(score);
+        //LOGGER.info(score);
         String date = matchDTO.getDate();
-        LOGGER.info(date);
+        //LOGGER.info(date);
         LocalDate matchDate = matchDateValidator.validate(date);
 
         try {
@@ -103,7 +103,7 @@ public class MatchService {
 
         Long aTeamId = updatedMatch.getATeamId();
         Long bTeamId = updatedMatch.getBTeamId();
-        LOGGER.info("Team a id: {} team b id: {}", aTeamId, bTeamId);
+        //LOGGER.info("Team a id: {} team b id: {}", aTeamId, bTeamId);
         String score = updatedMatch.getScore();
         String date = updatedMatch.getDate();
         LocalDate matchDate = matchDateValidator.validate(date);
@@ -112,22 +112,22 @@ public class MatchService {
             if (matchScoreValidator.validate(score) == null) {
                 throw new InvalidMatchFormatException("Match score is not formatted correctly or invalid.");
             }
-            LOGGER.info("Passed score validation");
+            //LOGGER.info("Passed score validation");
             if (matchDate == null) {
                 throw new InvalidMatchFormatException("Match date is not formatted correctly or invalid.");
             }
-            LOGGER.info("Passed date validation");
+            //LOGGER.info("Passed date validation");
 
             Match match = matchRepository.findById(matchId)
                     .orElseThrow(() -> new MatchNotFoundException("Match with ID " + matchId + " does not exist."));
-            LOGGER.info("Found match with id " + matchId);
+            //LOGGER.info("Found match with id " + matchId);
 
             Team teamA = teamRepository.findById(aTeamId)
                     .orElseThrow(() -> new TeamNotFoundException("Team with ID " + aTeamId + " not found."));
-            LOGGER.info("Found team with id of team a");
+            //LOGGER.info("Found team with id of team a");
             Team teamB = teamRepository.findById(bTeamId)
                     .orElseThrow(() -> new TeamNotFoundException("Team with ID " + bTeamId + " not found."));
-            LOGGER.info("Found team with id of team b");
+            //LOGGER.info("Found team with id of team b");
 
             // Update match fields
             match.setTeamA(teamA);

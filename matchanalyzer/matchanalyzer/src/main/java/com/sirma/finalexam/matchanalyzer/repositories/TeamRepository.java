@@ -18,4 +18,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     boolean existsByManagerFullName(String managerFullName);
 
+    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN TRUE ELSE FALSE END FROM Team t WHERE t.managerFullName = :managerFullName AND t.id <> :teamId")
+    boolean existsByManagerFullNameAndIdNot(@Param("managerFullName") String managerFullName, @Param("teamId") Long teamId);
+
+    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN TRUE ELSE FALSE END FROM Team t WHERE t.name = :teamName AND t.id <> :teamId")
+    boolean existsByNameAndIdNot(@Param("teamName") String teamName, @Param("teamId") Long teamId);
 }
