@@ -5,7 +5,7 @@ import com.sirma.finalexam.matchanalyzer.csvparsers.CsvPlayerProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvRecordProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvTeamProcessor;
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerRecordForMatchDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairTotalTimeTogetherDTO;
 import com.sirma.finalexam.matchanalyzer.services.PlayerAnalysisService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class TestController {
 //    }
 
     @GetMapping("/hopeThisWorks")
-    public ResponseEntity<List<Map.Entry<PlayerPairDTO, Long>>> getPlayerPairTimeTogether()
+    public ResponseEntity<List<Map.Entry<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO>>> getPlayerPairTimeTogether()
     {
         return ResponseEntity.ok(this.playerAnalysisService.getPairsWithMostTime());
     }

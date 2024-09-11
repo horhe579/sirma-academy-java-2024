@@ -1,8 +1,8 @@
 package com.sirma.finalexam.matchanalyzer.services;
 
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairTotalTimeTogetherDTO;
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerRecordForMatchDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.ResponseRecordDTO;
 import com.sirma.finalexam.matchanalyzer.repositories.RecordRepository;
 import com.sirma.finalexam.matchanalyzer.util.PlayerPairTimeCalculator;
 import org.springframework.stereotype.Service;
@@ -23,23 +23,23 @@ public class PlayerAnalysisService {
         this.timeCalculator = calculator;
     }
 
-    public List<Map.Entry<PlayerPairDTO, Long>> getPairsWithMostTime()
+    public List<Map.Entry<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO>> getPairsWithMostTime()
     {
-        Map<PlayerPairDTO, Long> playerPairMap = this.getTimeTogetherMapTestFunctionToBeChanged();
-        List<Map.Entry<PlayerPairDTO, Long>> pairsWithMostTime = new ArrayList<>();
+        Map<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO> playerPairMap = this.getTimeTogetherMapTestFunctionToBeChanged();
+        List<Map.Entry<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO>> pairsWithMostTime = new ArrayList<>();
         Long maxTimeTogether = 0L;
 
-        for(Long pairTime : playerPairMap.values())
+        for(var pairTime : playerPairMap.values())
         {
-            if(pairTime > maxTimeTogether)
+            if(pairTime.getTotalTimeTogether() > maxTimeTogether)
             {
-                maxTimeTogether = pairTime;
+                maxTimeTogether = pairTime.getTotalTimeTogether();
             }
         }
 
         for(var pairWithTime : playerPairMap.entrySet())
         {
-            if(pairWithTime.getValue() == maxTimeTogether)
+            if(pairWithTime.getValue().getTotalTimeTogether() == maxTimeTogether)
             {
                 pairsWithMostTime.add(pairWithTime);
             }
@@ -67,14 +67,14 @@ public class PlayerAnalysisService {
     // The value is the time each pair
     //Played together in common matches,
     // no duplicate pairs because of the overridden methods of class Object in the DTO
-    private Map<PlayerPairDTO, Long> getTimeTogetherMapTestFunctionToBeChanged()
+    private Map<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO> getTimeTogetherMapTestFunctionToBeChanged()
     {
         //make it accept a repo or something
         Map<Long, List<PlayerRecordForMatchDTO>> arg1 = getPlayerTimeForAllMatches();
 
         this.timeCalculator.processMatchRecords(arg1);
 
-        return this.timeCalculator.getPlayerPairTimeTogetherMap();
+        return this.timeCalculator.getPlayerPairTimeTableMap();
     }
 
     //Helper method to make the grouping by in the getPlayerTimeForAllMatches() function easier to understand
