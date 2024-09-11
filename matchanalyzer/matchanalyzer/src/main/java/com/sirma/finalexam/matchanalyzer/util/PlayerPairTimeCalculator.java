@@ -56,7 +56,7 @@ public class PlayerPairTimeCalculator {
         {
             Long maxTimeTogether = 0L;
 
-            //Goes trough all the pairs to see what is the max time together on the field of a pair
+            //Goes through all the pairs to see what is the max time together on the field of a pair
             for(var pairTime : playerPairTimeTableMap.values())
             {
                 if(pairTime.getTotalTimeTogether() > maxTimeTogether)

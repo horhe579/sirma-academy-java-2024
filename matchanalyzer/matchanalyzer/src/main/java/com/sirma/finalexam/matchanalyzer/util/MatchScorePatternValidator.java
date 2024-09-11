@@ -1,7 +1,6 @@
 package com.sirma.finalexam.matchanalyzer.util;
 
 import com.sirma.finalexam.matchanalyzer.interfaces.PatternValidator;
-import org.springframework.context.annotation.Bean;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

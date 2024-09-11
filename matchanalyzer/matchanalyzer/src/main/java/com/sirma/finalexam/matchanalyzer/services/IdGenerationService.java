@@ -34,7 +34,7 @@ public class IdGenerationService<T> implements IdGenerator<T> {
     private Long generateId()
     {
         //add some boundary
-        return random.nextLong();
+        return Math.abs(random.nextLong());
     }
 
     private boolean idExists(Long id, JpaRepository<T, Long> repository) {
