@@ -22,10 +22,12 @@ public class TeamService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TeamService.class);
     private TeamRepository teamRepository;
     private IdGenerationService<Team> idGenerationService;
+    private NewLongIdGenerationService newLongIdGenerationService;
 
-    public TeamService(TeamRepository teamRepository, IdGenerationService<Team> idGenerationService) {
+    public TeamService(TeamRepository teamRepository, IdGenerationService<Team> idGenerationService, NewLongIdGenerationService newLongIdGenerationService) {
         this.teamRepository = teamRepository;
         this.idGenerationService = idGenerationService;
+        this.newLongIdGenerationService = newLongIdGenerationService;
     }
 
     //implement returning responses if needed
@@ -137,6 +139,6 @@ public class TeamService {
 
     private Long generateUniqueId()
     {
-        return this.idGenerationService.generateUniqueId(teamRepository);
+        return this.newLongIdGenerationService.generateUniqueId("teams");
     }
 }

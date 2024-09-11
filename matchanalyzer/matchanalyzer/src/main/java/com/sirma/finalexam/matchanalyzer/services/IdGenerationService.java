@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-public class IdGenerationService<T> implements IdGenerator<T> {
+public class IdGenerationService<T> implements IdGenerator<T, Long> {
     //TODO do not permit negative IDs
 
     private int limit = 1000;

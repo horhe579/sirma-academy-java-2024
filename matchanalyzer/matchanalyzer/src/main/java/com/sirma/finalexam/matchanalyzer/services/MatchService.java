@@ -27,17 +27,20 @@ public class MatchService {
     private MatchDatePatternValidator matchDateValidator;
     private MatchScorePatternValidator matchScoreValidator;
     private IdGenerationService<Match> idGenerationService;
+    private NewLongIdGenerationService newLongIdGenerationService;
 
     public MatchService(MatchRepository matchRepository,
                         TeamRepository teamRepository,
                         MatchDatePatternValidator matchDatePatternValidator,
                         MatchScorePatternValidator matchScorePatternValidator,
-                        IdGenerationService<Match> idGenerationService) {
+                        IdGenerationService<Match> idGenerationService,
+                        NewLongIdGenerationService newLongIdGenerationService) {
         this.matchRepository = matchRepository;
         this.teamRepository = teamRepository;
         this.matchDateValidator = matchDatePatternValidator;
         this.matchScoreValidator = matchScorePatternValidator;
         this.idGenerationService = idGenerationService;
+        this.newLongIdGenerationService = newLongIdGenerationService;
     }
 
     public List<Match> getAllMatches()
@@ -164,6 +167,6 @@ public class MatchService {
     }
 
     private Long generateUniqueId() {
-        return this.idGenerationService.generateUniqueId(matchRepository);
+        return this.newLongIdGenerationService.generateUniqueId("matches");
     }
 }

@@ -25,11 +25,16 @@ public class PlayerService {
     private PlayerRepository playerRepository;
     private TeamRepository teamRepository;
     private IdGenerationService<Player> idGenerationService;
+    private NewLongIdGenerationService newLongIdGenerationService;
 
-    public PlayerService(PlayerRepository playerRepository, TeamRepository teamRepository, IdGenerationService<Player> idGenerationService) {
+    public PlayerService(PlayerRepository playerRepository,
+                         TeamRepository teamRepository,
+                         IdGenerationService<Player> idGenerationService,
+                         NewLongIdGenerationService newLongIdGenerationService) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.idGenerationService = idGenerationService;
+        this.newLongIdGenerationService = newLongIdGenerationService;
     }
 
     public List<Player> getAllPlayers()
@@ -156,7 +161,8 @@ public class PlayerService {
     public boolean deletePlayerById(Long playerId)
     {
         try {
-            Player player = this.playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException("Player with ID "
+            Player player = this.playerRepository.findById(playerId)
+                    .orElseThrow(() -> new PlayerNotFoundException("Player with ID "
                     + playerId + " not found."));
             this.playerRepository.delete(player);
             return true;
@@ -167,7 +173,7 @@ public class PlayerService {
 
     private Long generateUniqueId()
     {
-        return this.idGenerationService.generateUniqueId(playerRepository);
+        return this.newLongIdGenerationService.generateUniqueId("players");
     }
 
 }
