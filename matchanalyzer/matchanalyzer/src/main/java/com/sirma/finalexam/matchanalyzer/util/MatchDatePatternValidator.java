@@ -37,7 +37,6 @@ public class MatchDatePatternValidator implements PatternValidator<LocalDate> {
     }
 
 
-    //Make a map with all date formats and check if it matches any of them
     //returns null if invalid, otherwise returns Date
     @Override
     public LocalDate validate(String data) {

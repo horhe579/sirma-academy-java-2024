@@ -3,7 +3,6 @@ package com.sirma.finalexam.matchanalyzer.controllers;
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.services.TeamService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

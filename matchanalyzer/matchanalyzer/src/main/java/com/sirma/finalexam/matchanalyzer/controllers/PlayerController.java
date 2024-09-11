@@ -1,15 +1,11 @@
 package com.sirma.finalexam.matchanalyzer.controllers;
 
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreatePlayerDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Player;
-import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.services.PlayerService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

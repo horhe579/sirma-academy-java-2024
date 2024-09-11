@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ValidationConfig {
+    //letting the ioc container create beans for validation since i cannot make interface methods static
     @Bean
     public MatchScorePatternValidator matchScorePatternValidator() {
         return new MatchScorePatternValidator();

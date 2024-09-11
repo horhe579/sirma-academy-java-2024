@@ -84,6 +84,10 @@ public class CsvMatchProcessor implements CsvParser<Match> {
         // Line format: ID,ATeamID,BTeamID,Date,Score
         // Example: 1,1,2,6/14/2024,5-1
         String[] matchFields = csvLine.split(",");
+        if(matchFields.length != 5)
+        {
+            return null;
+        }
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         //Pattern matchScorePatter = Pattern.compile("((0|[1-9]\\d*)(\\((0|[1-9]\\d*)\\))?-(0|[1-9]\\d*)(\\((0|[1-9]\\d*)\\))?)");
         Long matchId = null;

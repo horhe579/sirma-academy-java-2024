@@ -13,7 +13,7 @@ public class PlayerPairTotalTimeTogetherDTO {
 
     private Long totalTimeTogether = 0L;
 
-    private List<PlayerPairMatchOverlapDTO> matchOverlapList = new ArrayList<>();
+    private final List<PlayerPairMatchOverlapDTO> matchOverlapList = new ArrayList<>();
 
     public PlayerPairTotalTimeTogetherDTO(Long totalTimeTogether, Long matchId) {
         this.totalTimeTogether = totalTimeTogether;

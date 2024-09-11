@@ -1,10 +1,10 @@
 package com.sirma.finalexam.matchanalyzer.util;
 
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairDTO;
-import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairMatchOverlapDTO;
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerPairTotalTimeTogetherDTO;
 import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.PlayerRecordForMatchDTO;
-import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,16 +14,20 @@ import java.util.Map;
 @Service
 public class PlayerPairTimeCalculator {
 
-    //A map
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerPairTimeCalculator.class);
     // Map<{player1Id, player2Id}, {totalTimeTogether, List<PlayerPairMatchOverlap>}>
-    @Getter
-    private Map<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO> playerPairTimeTableMap = new HashMap<>();
-    private Map<PlayerPairDTO, Long> playerPairTimeTogetherMap = new HashMap<>();
 
     //Receives a Map with the key being a Match ID and the value being a player with the from and to minutes
-    public void processMatchRecords(Map<Long, List<PlayerRecordForMatchDTO>> matchRecordsMap)
+    //            ____ DTO1:{1, 0, 90}
+    //           /
+    // MatchId:1 ----- DTO2:{2, 30, 60}
+    //           \
+    //            ‾‾‾‾ DTO3:{3, 0, 10}
+    //Returns a map of all the pairs with total time together and matches
+    public Map<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO> extractPairsWithTimeTogether(Map<Long, List<PlayerRecordForMatchDTO>> recordsByMatch, boolean getMostTime)
     {
-        for (var entry : matchRecordsMap.entrySet()) {
+        Map<PlayerPairDTO, PlayerPairTotalTimeTogetherDTO> playerPairTimeTableMap = new HashMap<>();
+        for (var entry : recordsByMatch.entrySet()) {
             Long matchId = entry.getKey();
             List<PlayerRecordForMatchDTO> playerRecordsForMatch = entry.getValue();
 
@@ -38,22 +42,39 @@ public class PlayerPairTimeCalculator {
                     if(timeTogetherInGame > 0)
                     {
                         //When a pair has at least 1 minute together on the field, create a pair to be stored
-                        PlayerPairDTO playerPair = new PlayerPairDTO(playerRecordA.getPlayerId(),
+                        PlayerPairDTO playerPair = new PlayerPairDTO(
+                                playerRecordA.getPlayerId(),
                                 playerRecordB.getPlayerId());
-                        playerPairTimeTableMap.merge(playerPair,
-                                new PlayerPairTotalTimeTogetherDTO(timeTogetherInGame, matchId), this::addMatch);
-                        //playerPairTimeTogetherMap.merge(playerPair, timeTogetherInGame, Long::sum);
+
+                        playerPairTimeTableMap.putIfAbsent(playerPair, new PlayerPairTotalTimeTogetherDTO());
+                        playerPairTimeTableMap.get(playerPair).addMatchOverlap(matchId, timeTogetherInGame);
                     }
                 }
             }
         }
-    }
-    public PlayerPairTotalTimeTogetherDTO addMatch(PlayerPairTotalTimeTogetherDTO a, PlayerPairTotalTimeTogetherDTO b) {
-        //a - timeTogether: 0; List<MatchOverlap> = {empty}
-        //b - timeTogether: 10; List<MatchOverlap> = {{1, 10};}
-        //BAD METHOD PLEASE REFACTOR
-        a.addMatchOverlap(b.getMatchOverlapList().get(0).getMatchID(), b.getTotalTimeTogether());
-        return a;
+        if(getMostTime)
+        {
+            Long maxTimeTogether = 0L;
+
+            //Goes trough all the pairs to see what is the max time together on the field of a pair
+            for(var pairTime : playerPairTimeTableMap.values())
+            {
+                if(pairTime.getTotalTimeTogether() > maxTimeTogether)
+                {
+                    maxTimeTogether = pairTime.getTotalTimeTogether();
+                }
+            }
+            LOGGER.info("Max time together: " + maxTimeTogether);
+            //Adds all the entries to the list to be returned
+            var iterator = playerPairTimeTableMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                var entry = iterator.next();
+                if (!entry.getValue().getTotalTimeTogether().equals(maxTimeTogether)) {
+                    iterator.remove();
+                }
+            }
+        }
+        return playerPairTimeTableMap;
     }
 
     private long calculateMinutesTogether(PlayerRecordForMatchDTO playerRecordA, PlayerRecordForMatchDTO playerRecordB)

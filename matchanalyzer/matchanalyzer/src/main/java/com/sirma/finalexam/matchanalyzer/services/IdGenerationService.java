@@ -8,6 +8,7 @@ import java.util.Random;
 
 @Service
 public class IdGenerationService<T> implements IdGenerator<T> {
+    //TODO do not permit negative IDs
 
     private int limit = 1000;
     private Random random = new Random();

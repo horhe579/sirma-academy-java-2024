@@ -67,6 +67,10 @@ public class CsvTeamProcessor implements CsvParser<Team> {
         // Line format: ID,Name,ManagerFullName,Group
         // Example: 1,Germany,Julian Nagelsmann,A
         String[] teamFields = csvLine.split(",");
+        if(teamFields.length != 4)
+        {
+            return null;
+        }
         Long teamId = null;
 
         try {

@@ -73,6 +73,10 @@ public class CsvRecordProcessor implements CsvParser<Record> {
         // Line format: ID,PlayerID,MatchID,fromMinutes,toMinutes
         // Example: 1,1,1,0,NULL
         String[] recordFields = csvLine.split(",");
+        if(recordFields.length != 5)
+        {
+            return null;
+        }
         Long recordId = null;
 
         try {

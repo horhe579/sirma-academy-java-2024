@@ -15,4 +15,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("SELECT r.match.id, r.player.id, r.fromMinutes, r.toMinutes FROM Record r")
     public List<Object[]> getAllPlayerRecords();
+
 }

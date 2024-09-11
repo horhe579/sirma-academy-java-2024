@@ -71,6 +71,10 @@ public class CsvPlayerProcessor implements CsvParser<Player> {
         // Line format: ID,TeamNumber,Position,FullName,TeamID
         // Example: 1,1,GK,Manuel Neuer,1
         String[] playerFields = csvLine.split(",");
+        if(playerFields.length != 5)
+        {
+            return null;
+        }
         Long playerId = null;
 
         try {
