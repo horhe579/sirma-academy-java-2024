@@ -39,10 +39,10 @@ public class TestController {
     @Transactional
     @GetMapping("/parseMatches")
     public void parseMatches() throws IOException {
-        csvTeamProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\teams.csv");
-        csvPlayerProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\players.csv");
-        csvMatchProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\matches.csv");
-        csvRecordProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\records.csv");
+        csvTeamProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\test\\teams_test.csv");
+        csvPlayerProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\test\\players_test.csv");
+        csvMatchProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\test\\matches_test.csv");
+        csvRecordProcessor.parseCsv("C:\\Users\\Gesha\\Documents\\GitHub\\sirma-academy-java-2024\\matchanalyzer\\matchanalyzer\\src\\main\\resources\\data\\test\\records_test.csv");
     }
 
 //    @GetMapping("/allRecords")
@@ -52,9 +52,9 @@ public class TestController {
 //    }
 
     @GetMapping("/hopeThisWorks")
-    public ResponseEntity<Map<PlayerPairDTO, Long>> getPlayerPairTimeTogether()
+    public ResponseEntity<List<Map.Entry<PlayerPairDTO, Long>>> getPlayerPairTimeTogether()
     {
-        return ResponseEntity.ok(this.playerAnalysisService.getTimeTogetherMapTestFunctionToBeRemoved());
+        return ResponseEntity.ok(this.playerAnalysisService.getPairsWithMostTime());
     }
 
 }

@@ -7,6 +7,7 @@ import com.sirma.finalexam.matchanalyzer.repositories.RecordRepository;
 import com.sirma.finalexam.matchanalyzer.util.PlayerPairTimeCalculator;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,24 +23,34 @@ public class PlayerAnalysisService {
         this.timeCalculator = calculator;
     }
 
-    public List<ResponseRecordDTO> getAllRecords()
+    public List<Map.Entry<PlayerPairDTO, Long>> getPairsWithMostTime()
     {
-//        //add edge case handling
-//        List<Object[]> records = this.recordRepository.getAllPlayerRecords();
-//
-//        List<ResponseRecordDTO> response = records.stream()
-//                .map(r ->
-//                        new ResponseRecordDTO(
-//                                ((Number) r[0]).longValue(),
-//                                ((Number) r[1]).longValue(),
-//                                ((Number) r[2]).longValue(),
-//                                ((Number) (r[3] == null ? 90 : r[3])).longValue()
-//                        )).toList();
-//
-//        return response;
-        return null;
+        Map<PlayerPairDTO, Long> playerPairMap = this.getTimeTogetherMapTestFunctionToBeChanged();
+        List<Map.Entry<PlayerPairDTO, Long>> pairsWithMostTime = new ArrayList<>();
+        Long maxTimeTogether = 0L;
+
+        for(Long pairTime : playerPairMap.values())
+        {
+            if(pairTime > maxTimeTogether)
+            {
+                maxTimeTogether = pairTime;
+            }
+        }
+
+        for(var pairWithTime : playerPairMap.entrySet())
+        {
+            if(pairWithTime.getValue() == maxTimeTogether)
+            {
+                pairsWithMostTime.add(pairWithTime);
+            }
+        }
+
+        return pairsWithMostTime;
+
     }
 
+    //Returns a Map where the key is a Match ID, and the value is a PlayerRecordForMatchDTO
+    //That holds information about a record associated with a match including the Player ID, fromMinutes and toMinutes
     private Map<Long, List<PlayerRecordForMatchDTO>> getPlayerTimeForAllMatches()
     {
         //records in the format       matchId -> List<{ playerId, from, to }>
@@ -52,7 +63,11 @@ public class PlayerAnalysisService {
         return response;
     }
 
-    public Map<PlayerPairDTO, Long> getTimeTogetherMapTestFunctionToBeRemoved()
+    //Returns a Map where the key is a PlayerPairDTO, consisting of 2 player IDs.
+    // The value is the time each pair
+    //Played together in common matches,
+    // no duplicate pairs because of the overridden methods of class Object in the DTO
+    private Map<PlayerPairDTO, Long> getTimeTogetherMapTestFunctionToBeChanged()
     {
         //make it accept a repo or something
         Map<Long, List<PlayerRecordForMatchDTO>> arg1 = getPlayerTimeForAllMatches();
@@ -62,6 +77,8 @@ public class PlayerAnalysisService {
         return this.timeCalculator.getPlayerPairTimeTogetherMap();
     }
 
+    //Helper method to make the grouping by in the getPlayerTimeForAllMatches() function easier to understand
+    //Casts a field of an Object born from an SQL query that corresponds to the ID of the match
     private Long getMatchId(Object[] record)
     {
         //assuming a record is correct and follows the format
@@ -69,6 +86,9 @@ public class PlayerAnalysisService {
         return matchId;
     }
 
+    //Helper method to make the grouping by in the getPlayerTimeForAllMatches() function easier to understand
+    //Casts an Object born from an SQL Query to a PlayerRecordForMatchDTO, taking into accounting
+    //That NULL means 90 minutes
     private PlayerRecordForMatchDTO getPlayerRecordForMatchDTO(Object[] record)
     {
         //again assuming the record is correct and in the right structure
