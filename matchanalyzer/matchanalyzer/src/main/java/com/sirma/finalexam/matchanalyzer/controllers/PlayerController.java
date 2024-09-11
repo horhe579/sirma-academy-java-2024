@@ -2,6 +2,8 @@ package com.sirma.finalexam.matchanalyzer.controllers;
 
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreatePlayerDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Player;
+import com.sirma.finalexam.matchanalyzer.entities.Team;
+import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
 import com.sirma.finalexam.matchanalyzer.services.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +29,14 @@ public class PlayerController {
     }
 
     @GetMapping("/{playerId}")
-    public Optional<Player> getPlayerById(@PathVariable Long playerId)
+    public ResponseEntity<Player> getPlayerById(@PathVariable Long playerId)
     {
-        return this.playerService.getPlayerById(playerId);
+        Player player = this.playerService.getPlayerById(playerId);
+        if(player == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(player);
     }
 
     @PostMapping()
@@ -46,8 +53,14 @@ public class PlayerController {
     //Reusing the same DTO since i do not want repeating code, created a TeamResponseDTO because its weird to use the creation one
     public ResponseEntity<Player> updatePlayer(@PathVariable Long playerId, @RequestBody CreatePlayerDTO updatedPlayer)
     {
-        Player player = this.playerService.updatePlayer(playerId, updatedPlayer);
-        if(player!=null) {
+        Player player = null;
+        try {
+            player = this.playerService.updatePlayer(playerId, updatedPlayer);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        if(player!=null)
+        {
             return ResponseEntity.ok(player);
         }
         return ResponseEntity.badRequest().build();

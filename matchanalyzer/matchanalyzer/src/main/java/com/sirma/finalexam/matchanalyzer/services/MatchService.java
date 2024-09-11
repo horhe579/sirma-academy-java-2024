@@ -3,9 +3,7 @@ package com.sirma.finalexam.matchanalyzer.services;
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreateMatchDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Match;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
-import com.sirma.finalexam.matchanalyzer.exceptions.InvalidMatchFormatException;
-import com.sirma.finalexam.matchanalyzer.exceptions.MatchNotFoundException;
-import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
+import com.sirma.finalexam.matchanalyzer.exceptions.*;
 import com.sirma.finalexam.matchanalyzer.repositories.MatchRepository;
 import com.sirma.finalexam.matchanalyzer.repositories.TeamRepository;
 import com.sirma.finalexam.matchanalyzer.util.MatchDatePatternValidator;
@@ -48,9 +46,15 @@ public class MatchService {
         return matches;
     }
 
-    public Optional<Match> getMatchById(Long matchId)
+    public Match getMatchById(Long matchId)
     {
-        return this.matchRepository.findById(matchId);
+        try {
+            return this.matchRepository.findById(matchId)
+                    .orElseThrow(() -> new MatchNotFoundException("Match with ID: " + matchId + " does not exist."));
+        } catch (MatchNotFoundException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
     }
 
     @Transactional
@@ -92,7 +96,9 @@ public class MatchService {
             match.setScore(score);
             return this.matchRepository.save(match);
 
-        } catch (RuntimeException e) {
+        } catch (MatchNotFoundException e) {
+            throw new MatchNotFoundException(e.getMessage());
+        } catch (InvalidMatchFormatException e) {
             LOGGER.warn(e.getMessage());
             return null;
         }

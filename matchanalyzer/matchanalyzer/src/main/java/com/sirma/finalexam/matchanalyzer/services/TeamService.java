@@ -35,9 +35,15 @@ public class TeamService {
         return teams;
     }
 
-    public Optional<Team> getTeamById(Long teamId)
+    public Team getTeamById(Long teamId)
     {
-        return this.teamRepository.findById(teamId);
+        try {
+            return this.teamRepository.findById(teamId)
+                    .orElseThrow(() -> new TeamNotFoundException("Team with ID: " + teamId + " not found."));
+        } catch (TeamNotFoundException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
     }
 
     public Team createTeam(CreateTeamDTO teamDTO)
@@ -104,10 +110,16 @@ public class TeamService {
             team.setName(updatedTeam.getName());
             team.setManagerFullName(updatedTeam.getManagerFullName());
             return this.teamRepository.save(team);
-        } catch (RuntimeException e) {
+        } catch (TeamNotFoundException e) {
+            throw new TeamNotFoundException(e.getMessage());
+        } catch (TeamManagerException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        } catch (TeamNameException e) {
             LOGGER.warn(e.getMessage());
             return null;
         }
+
     }
 
     //add authorization so only admins can delete

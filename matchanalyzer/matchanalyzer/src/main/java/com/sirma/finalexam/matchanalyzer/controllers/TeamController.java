@@ -1,7 +1,9 @@
 package com.sirma.finalexam.matchanalyzer.controllers;
 
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
+import com.sirma.finalexam.matchanalyzer.entities.Match;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
+import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
 import com.sirma.finalexam.matchanalyzer.services.TeamService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +30,14 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}")
-    public Optional<Team> getUserById(@PathVariable Long teamId)
+    public ResponseEntity<Team> getUserById(@PathVariable Long teamId)
     {
-        return this.teamService.getTeamById(teamId);
+        Team team = this.teamService.getTeamById(teamId);
+        if(team == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(team);
     }
 
     @PostMapping()
@@ -48,7 +55,12 @@ public class TeamController {
     //Reusing the same DTO since i do not want repeating code, created a TeamResponseDTO because its weird to use the creation one
     public ResponseEntity<Team> updateTeam(@PathVariable Long teamId, @RequestBody CreateTeamDTO updatedTeam)
     {
-        Team team = this.teamService.updateTeam(teamId, updatedTeam);
+        Team team = null;
+        try {
+            team = this.teamService.updateTeam(teamId, updatedTeam);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
         if(team!=null)
         {
             return ResponseEntity.ok(team);

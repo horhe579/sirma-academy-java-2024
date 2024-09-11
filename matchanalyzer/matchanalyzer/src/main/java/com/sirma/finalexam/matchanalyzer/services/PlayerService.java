@@ -38,9 +38,15 @@ public class PlayerService {
         return players;
     }
 
-    public Optional<Player> getPlayerById(Long playerId)
+    public Player getPlayerById(Long playerId)
     {
-        return this.playerRepository.findById(playerId);
+        try {
+            return this.playerRepository.findById(playerId)
+                    .orElseThrow(() -> new PlayerNotFoundException("Player with ID: " + playerId + " not found."));
+        } catch (PlayerNotFoundException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
     }
 
     @Transactional
@@ -130,8 +136,18 @@ public class PlayerService {
             player.setFullName(fullName);
             player.setTeamNumber(teamNumber);
             return this.playerRepository.save(player);
-        } catch (RuntimeException e) {
+        }catch (PlayerNotFoundException e)
+        {
+            throw new PlayerNotFoundException(e.getMessage());
+        }
+        catch (PlayerAlreadyExistsException e) {
             //if time left make global exc handler
+            LOGGER.warn(e.getMessage());
+            return null;
+        }
+        catch (TeamNotFoundException e)
+        {
+            LOGGER.warn(e.getMessage());
             return null;
         }
     }
