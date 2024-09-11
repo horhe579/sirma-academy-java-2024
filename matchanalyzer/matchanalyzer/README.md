@@ -1,45 +1,94 @@
+# Match Analyzer
 
-# My Solution To The Sirma Final Exam
+## Overview
+The **Match Analyzer** is a Spring Boot application that processes football match data to identify pairs of football players who have played together in the common matches for the longest time. It reads data from CSV files, including player details, team information, match data, and individual player participation records, then computes the pair of players who have shared the field the longest.
 
-A brief description of what this project does and my understanding of it
+## Table of Contents
+- [Overview](#overview)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Features](#features)
+- [Algorithm](#algorithm)
+- [Dependencies](#dependencies)
+- [License](#license)
 
+## Installation
+To get started with the Match Analyzer application:
 
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/horhe579/sirma-academy-java-2024.git
 
+    cd sirma-academy-java-2024\matchanalyzer\matchanalyzer\matchanalyzer
+    ```
 
-## Day 1
-Spent the first day thinking of how the project is going to be structured, copied most of the functionality from my CSV parser from the Employees project and changed it so it works with the files that were attached to the task(did not finish completely)
+2. Build the project using Maven:
+    ```bash
+    mvn clean install
+    ```
 
-## Day 2
-Created entities to match the rows in the CSV files, the entities were as follows:
+3. Run the Spring Boot application:
+    ```bash
+    mvn spring-boot:run
+    ```
 
+## Configuration
+The application can be configured via the `application.properties` file. Below are the settings I used:
 
+```properties
+# Server properties
+spring.application.name=matchanalyzer
+server.port=PORT_NUMBER
 
-- Team Entity
-- Match Entity
-- Player Entity
-- Record Entity
+# Database properties
+spring.datasource.url=DATASOURCE_URL
+spring.datasource.username=DATASOURCE_USERNAM
+spring.datasource.password=DATASOURCE_PASSWORD
 
-All of them had the needed fields, I added some checks using Hibernate validation and defined the relations between the tables
+# Hibernate properties
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+```
 
-## Day 3
-Managed to implement all of the CSV parsers which use a common interface that has 3 methods - one to read the file line by line, one to parse a line and create the according object and one to save a batch. I save batches since I do not want to stress my computer with over 1100 entries and in each parser I have defined a batch size, that once reached after parsing enough lines calls the save batch method which takes a collection of entries. The parse method takes a line and makes sure it is in the correct format and if it has a reference to another table it makes sure it is a valid one, if a line is invalid the method returns NULL and does not get added to the list of entries that get saved.
+## Usage
+To try the app out you can either:
+- Visit the `/parse-files/csv` endpoint and specify the routes of the CSV files. The files have to be formatted as follows:
+  - `teams.csv`: `ID,Name,ManagerFullName,Group
+    `
+  - `matches.csv`: `ID,ATeamID,BTeamID,Date,Score
+    `
+  - `players.csv`: `ID,TeamNumber,Position,FullName,TeamID`
+  - `records.csv`: `ID,PlayerID,MatchID,fromMinutes,toMinutes`
 
-The API as of right now works on the following principle:
-A hardcoded file path for each CSV lies in my code, and once I visit the endpoint "/test" and make a GET req. all of the CSV files are parsed and loaded in the DB.
+- Or enter some data manually using the CRUD operations:
+  - `/teams`
+  - `/matches`
+  - `/players`
+    - Keep in mind that the `toMinutes` column can have NULL values, representing the end of the match. Also, the `Date` column is in the format Month-Date-Year. The `Score` also has a specific format, either `X-Y` or `X(X1)-Y(Y1)` with penalties. A **team** cannot have more than 1 player with a specific `FullName` or `TeamNumber`. Each **team** can only be associated with a single **manager**.
 
-I also used @Transactional annotation on the save batch method to make sure if something goes wrong no data is saved halfway.
+## Features
+Covers the following goals:
+- [x] Parsing of the CSV files without using an external library
+- [x] Data integrity checks
+- [x] Persistence of the data in an SQL database
+- [x] Field validation
+- [x] Handling edge cases
+- [x] Computing the pair of players who have played together the longest
+- [x] CRUD operations for the entities
+- [x] Custom ID generation for the entities created via the CRUD operations
+- [x] Custom exceptions
+- [x] Support more than one date format (to my understanding at least)
+- [ ] Followed SOLID principles (for the most part) and clean code principles (for the most part), no time left to refactor code to follow some design patterns
 
-I had a minor problem with @GeneratedValue annotation, since when I tried to change the CSV files to contain faulty lines, they do not get saved and the IDs I set in the constructor get overriden by the annotation, messing up the relations completely. I removed the annotation since the answers on Stack Overflow to override the GenerationStrategy didn't seem to work.
-
-Implementing the algorithm for getting the pair of players is left for the next day, since I have to think it out.
-
-I started working on the CRUD operations and defined all the needed services and controllers. I started with the Team creation since it does not have any relations, and had to implement a custom Id Generator, I defined an interface and a Service class that works for all of the 4 classes(I think) and implemented the C of CRUD for Teams, then i realized when parsing the CSV after creating a entry using the controller I do not check if the ID in the line already exists in the DB so I defined a custom function in the repository.
-
-So far I have managed to take care of these concerns:
-
-- Parsing the CSV files
-- Maintaining data integrity
-- Not using an external CSV parsing library
-- Using an SQL DB
-- Taking care of field validation
-- And handling some edge cases
+## Algorithm
+The algorithm for finding the pair of players who have played together the longest is as follows:
+1. After calling the `/player-analysis/player-pair/most-time-together` endpoint, a method `.getPairsWithMostTime()` from the `PlayerAnalysisService` is called.
+2. The `RecordService` is injected into the `PlayerAnalysisService`, and after calling the `.getPairsWithMostTime()` method `.getPlayerRecordsByMatch()` gets called.
+3. The `.getPlayerRecordsByMatch()` returns a map, where the key is the match ID and the value is a list of records for that match.
+    - it accesses a list of all records from the database in the following format: `MatchID, PlayerID, fromMinutes, toMinutes` and then it groups them by match ID and collects all the records for that match in a list using parsers that take the raw `Object` array from the query and return a `DTO`.
+4. Then the `.extractPairsWithTimeTogether()` method is called, it takes the map from the previous step.
+    - it uses a nested loop to compare each player with every other player in the match and calculates the time they spent together on the field by taking the maximum of the start times and the minimum of the end times.
+    - if the players have spent any time together, they get added to a map where the key is the pair of players and the value is a DTO, holding information about the time they spent together and each match with their overlap time in it.
+    - this method has a flag that can be set to true to return the map with the player pairs who played the most together instead of all player pairs with time together.
+    - it loops through the map and finds the maximum time a pair spent, then goes over the map again and for each pair that did not spend the maximum time together, it removes them from the map.
