@@ -10,8 +10,6 @@ The **Match Analyzer** is a Spring Boot application that processes football matc
 - [Usage](#usage)
 - [Features](#features)
 - [Algorithm](#algorithm)
-- [Dependencies](#dependencies)
-- [License](#license)
 
 ## Installation
 To get started with the Match Analyzer application:
