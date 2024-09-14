@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  app:
+    image: 'match_analyzer:latest'
+    build:
+      context: .
+    container_name: match_analyzer
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/match_analyzer
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=very_strong_p4ssw0rd
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "5005:5009"
+
+  db:
+    image: match_analyzer_db:latest
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=very_strong_p4ssw0rd
+      - POSTGRES_DB=match_analyzer

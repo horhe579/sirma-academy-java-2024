@@ -1,0 +1,3 @@
+FROM postgres:latest
+COPY postgresql_copy.conf /etc/postgresql/postgresql.conf
+COPY match_analyzer_init.sql /docker-entrypoint-initdb.d/
