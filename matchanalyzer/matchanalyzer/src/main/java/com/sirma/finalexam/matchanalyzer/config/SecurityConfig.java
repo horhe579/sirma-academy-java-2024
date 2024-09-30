@@ -3,6 +3,7 @@ package com.sirma.finalexam.matchanalyzer.config;
 import com.sirma.finalexam.matchanalyzer.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,8 +37,16 @@ public class SecurityConfig {
                         .permitAll() // Allows public access to certain endpoints
                         //.requestMatchers("/players/")
                         //.hasAuthority("ROLE_MANAGER")
-                        //.requestMatchers("/teams/", "/matches/")
-                        //.hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/matches", "/players", "/teams", "/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/matches").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/matches/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/matches/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/players").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/players/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/players/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/teams").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/teams/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/teams/**").hasAuthority("ADMIN")
                         .anyRequest()
                         .authenticated() // Requires authentication for all other requests
                 )
@@ -45,7 +54,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-
     }
 
     @Bean
