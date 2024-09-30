@@ -26,7 +26,6 @@ The following topics are covered in this project:
 - Sets and Maps
 - Strings
 - Git
-- Entry Exam
 - Streams & Files
 - Encapsulation
 - Inheritance
@@ -35,7 +34,6 @@ The following topics are covered in this project:
 - Generics
 - Iterators & Comparators
 - SOLID Principles
-- Mid Exam
 - SOLID Practice
 - Design Patterns
 - Design Patterns Advanced
