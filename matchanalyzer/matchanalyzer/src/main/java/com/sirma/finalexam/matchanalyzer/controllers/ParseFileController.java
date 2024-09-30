@@ -4,7 +4,7 @@ import com.sirma.finalexam.matchanalyzer.csvparsers.CsvMatchProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvPlayerProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvRecordProcessor;
 import com.sirma.finalexam.matchanalyzer.csvparsers.CsvTeamProcessor;
-import com.sirma.finalexam.matchanalyzer.dtos.CsvFilePathsDTO;
+import com.sirma.finalexam.matchanalyzer.dtos.playeranalysis.CsvFilePathsDTO;
 import com.sirma.finalexam.matchanalyzer.services.PlayerAnalysisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
