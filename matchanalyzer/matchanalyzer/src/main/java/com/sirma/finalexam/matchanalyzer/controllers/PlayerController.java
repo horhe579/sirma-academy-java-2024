@@ -2,14 +2,12 @@ package com.sirma.finalexam.matchanalyzer.controllers;
 
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreatePlayerDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Player;
-import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.exceptions.TeamNotFoundException;
 import com.sirma.finalexam.matchanalyzer.services.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/players")
 @RestController

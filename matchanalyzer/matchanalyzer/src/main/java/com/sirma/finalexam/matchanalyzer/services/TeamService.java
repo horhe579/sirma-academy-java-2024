@@ -1,6 +1,5 @@
 package com.sirma.finalexam.matchanalyzer.services;
 
-import com.sirma.finalexam.matchanalyzer.csvparsers.CsvMatchProcessor;
 import com.sirma.finalexam.matchanalyzer.dtos.create.CreateTeamDTO;
 import com.sirma.finalexam.matchanalyzer.entities.Team;
 import com.sirma.finalexam.matchanalyzer.exceptions.TeamManagerException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TeamService {
