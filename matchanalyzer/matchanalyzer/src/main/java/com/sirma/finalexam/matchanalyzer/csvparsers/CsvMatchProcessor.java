@@ -139,9 +139,10 @@ public class CsvMatchProcessor implements CsvParser<Match> {
         List<Long> ids = entries.stream().map(Match::getId).toList();
         List<Long> existingIds = this.matchRepository.getExistingIds(ids);
         List<Match> matches = entries.stream()
-                .filter(t -> !existingIds.contains(t.getId()))
+                .filter(m -> !existingIds.contains(m.getId()))
                 .toList();
         if(!matches.isEmpty()) {
             this.matchRepository.saveAll(matches);
-        }    }
+        }
+    }
 }
